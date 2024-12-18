@@ -23,4 +23,7 @@ public class ColourConstants {
     //BLUE - refers to a guessed letter in the right index.
     public static int BLUE = 2;
     public static Color BLUE_TILE = new Color(100, 149, 237);
+
+    //BACKGROUND - a light purple
+    public static Color PURPLE = new Color(221, 160, 221);
 }

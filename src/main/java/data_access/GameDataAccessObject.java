@@ -19,9 +19,18 @@ public class GameDataAccessObject {
     private final ArrayList<Word> answerBank;
     private final ArrayList<String> guessBank;
     private final Map<Character, Letter> letterBoard;
+    private final ArrayList<String> guessedWords;
+    private int turn;
 
     public GameDataAccessObject() {
 
+        // Initializes the turn counter.
+        turn = 0;
+
+        // Initializes an empty list corresponding to the guessed words.
+        guessedWords = new ArrayList<>();
+
+        // Initializes the alphabet for this player in this game.
         letterBoard = new HashMap<>();
 
         for (char letter = 'a'; letter <= 'z'; letter++) {
@@ -29,9 +38,9 @@ public class GameDataAccessObject {
             letterBoard.put(letter, curr);
         }
 
+        // build the answer bank with words from valid_answers.txt found in src/main/resources
         answerBank = new ArrayList<>();
 
-        // build the answer bank with words from valid_answers.txt found in src/main/resources
         try {
             URL answerPath = getClass().getClassLoader().getResource("valid_answers.txt");
             if (answerPath == null) {
@@ -52,9 +61,9 @@ public class GameDataAccessObject {
             System.out.println("File not found: 'valid_answers.txt'");
         }
 
+        // build the answer bank with words from valid_guesses.txt found in src/main/resources
         guessBank = new ArrayList<>();
 
-        // build the answer bank with words from valid_guesses.txt found in src/main/resources
         try {
             URL answerPath = getClass().getClassLoader().getResource("valid_guesses.txt");
             if (answerPath == null) {
@@ -74,6 +83,25 @@ public class GameDataAccessObject {
             System.out.println("File not found: 'valid_answers.txt'");
         }
 
+    }
+
+    /**
+     * Increment turn by 1 (indicating a turn has been played).
+     */
+    public void updateTurn() {
+        turn += 1;
+    }
+
+    /**
+     * Getter for the turn attribute of the GDAO.
+     * @return an integer corresponding to how many turns a game has played out to.
+     */
+    public int getTurn() {
+        return turn;
+    }
+
+    public List<String> getGuessedWords() {
+        return guessedWords;
     }
 
     /**
@@ -99,6 +127,7 @@ public class GameDataAccessObject {
      */
     public void updateGuessBank(String guess) {
         guessBank.remove(guess);
+        guessedWords.add(guess);
     }
 
     /**
