@@ -8,7 +8,7 @@ package entities;
 public class Letter {
 
     private int status;
-    private String literal;
+    private final String literal;
 
     public Letter(String literal, int status) {
         this.literal = literal;
