@@ -8,7 +8,7 @@ import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.*;
 
-import static app.ColourConstants.WHITE;
+import static app.ColourConstants.*;
 
 /**
  * This is the Data Object that holds the information about the current board and previous plays a player or computer
@@ -109,16 +109,53 @@ public class GameDataAccessObject {
      * @param letter is a valid letter from the alphabet of an ongoing versus_wordgame.
      * @param status is an integer in the set [-1, 2]
      */
-    public void updateBoard(char letter, int status) {
+    public void updateBoard(char letter, int status, int index) {
+
+        // if the letter's status is BLUE or if the status is equal to the status we are setting it to leave function.
+        if (letterBoard.get(letter).getStatus() == BLUE || letterBoard.get(letter).getStatus() == status) {
+            return;
+        }
+
+        if (status == LIGHTBLUE) {
+            letterBoard.get(letter).addLightBlueIndex(index);
+        }
+
+        if (status == GREY) {
+            letterBoard.get(letter).addGreyIndex(index);
+        }
         letterBoard.get(letter).setStatus(status);
+    }
+
+    /**
+     * Getter for the answerBank attribute of the Word class.
+     * @return answerBank.
+     */
+    public List<Word> getAnswerBank() {
+        return answerBank;
     }
 
     /**
      * Update an answer bank to remove any Words that have a letter that has been guessed and is known to not be in the
      * answer to the game.
      */
-    public void updateAnswerBank() {
+    public void updateAnswerBank(List<Integer> updatedBoard, Word guess) {
+
+        // remove all answers remaining that have grey letters.
         answerBank.removeIf(Word::hasGreyLetter);
+
+        for (Word word : answerBank) {
+            for (int i = 0; i < 5; i++) {
+
+                // If this letter is Grey or LightBlue at this index or if this index is found to be Blue through a
+                // guess where the letter at the index of this Blue letter of this word is not equal to the letter of
+                // the guess at this index remove this word from the answer bank.
+                if (word.getBoard().get(i).getGreyIndices().contains(i) ||
+                        word.getBoard().get(i).getLightBlueIndices().contains(i) ||
+                        updatedBoard.get(i) == BLUE && !guess.getLiterals().get(i).equals(word.getLiterals().get(i))) {
+                    answerBank.remove(word);
+                }
+            }
+        }
     }
 
     /**

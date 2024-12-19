@@ -25,6 +25,9 @@ public class KeyboardView extends JPanel {
         middleLayer.setBackground(ColourConstants.PURPLE);
         bottomLayer.setBackground(ColourConstants.PURPLE);
 
+        // TODO: Not sure how to access these buttons if even possible, none of them have names, but this is something
+        //  I can worry about later, maybe I could introduce a characterButton class who looks the same as below but an
+        //  attribute that lets me access the letter that it is referencing.
         // Add the letter buttons to use on the keyboard
         int letterCount = 1;
         for (char letter = 'a'; letter <= 'z'; letter++) {

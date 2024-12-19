@@ -9,21 +9,22 @@ import java.awt.Color;
 public class ColourConstants {
 
     //GREY - refers to a guessed letter that is not present in a game's answer.
-    public static int GREY = -1;
-    public static Color GREY_TILE = new Color(119,136,153);
+    public static final int GREY = -1;
+    public static final Color GREY_TILE = new Color(119,136,153);
 
     //WHITE - refers to an unguessed letter.
-    public static int WHITE = 0;
-    public static Color WHITE_TILE = new Color(255, 255, 255);
+    public static final int WHITE = 0;
+    public static final Color WHITE_TILE = new Color(255, 255, 255);
 
     //LIGHTBLUE - refers to a guessed letter in the wrong index.
-    public static int LIGHTBLUE = 1;
-    public static Color LIGHTBLUE_TILE = new Color(135, 206, 250);
+    public static final int LIGHTBLUE = 1;
+    public static final Color LIGHTBLUE_TILE = new Color(135, 206, 250);
 
     //BLUE - refers to a guessed letter in the right index.
-    public static int BLUE = 2;
-    public static Color BLUE_TILE = new Color(100, 149, 237);
+    public static final int BLUE = 2;
+    public static final Color BLUE_TILE = new Color(100, 149, 237);
 
     //BACKGROUND - a light purple
-    public static Color PURPLE = new Color(221, 160, 221);
+    public static final Color PURPLE = new Color(221, 160, 221);
+    public static Color DARKPURPLE = new Color(221, 140, 221);
 }
