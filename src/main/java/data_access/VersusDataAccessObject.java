@@ -165,4 +165,14 @@ public class VersusDataAccessObject {
 
         return true;
     }
+
+    /**
+     * Check if the game has been won.
+     * @param guess is a valid Word.
+     * @return True iff guess represents the same word as answer.
+     */
+    public boolean verifyGameWon(Word guess) {
+
+        return guess.getLiteral().equals(answer.getLiteral());
+    }
 }

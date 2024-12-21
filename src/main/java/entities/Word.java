@@ -152,6 +152,21 @@ public class Word {
     }
 
     /**
+     * Makes a list of each unique trigrams in this Word, this will be used to help score letters for building the
+     * guessability score of a word.
+     * @return a list of trigrams.
+     */
+    public List<String> getUniqueTrigrams() {
+        List<String> trigrams = new ArrayList<>();
+        for (int i = 0; i <= 2; i++) {
+            if (!(trigrams.contains(literal.substring(i, i + 2)))){
+                trigrams.add(literal.substring(i, i + 2));
+            }
+        }
+        return trigrams;
+    }
+
+    /**
      * Get the Board so that this word can be compared with the answer.
      * @return the board of this word.
      */
@@ -227,10 +242,27 @@ public class Word {
         for (String letter: getLiterals()) {
             if (letter.equals(target)) {
                 indexes.add(counter);
-                counter += 1;
             }
+
+            counter += 1;
         }
 
         return indexes;
+    }
+
+    /**
+     * Determine whether this word has any back to back occurrences of a letter.
+     * @param guess is a 5 letter string.
+     * @return True iff an occurrence such as "aa" is an element of guess.
+     */
+    public boolean containsRepeatLetters(String guess) {
+
+        for (int i = 0; i < 4; i++) {
+            if (guess.charAt(i) == guess.charAt(i + 1)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

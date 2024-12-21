@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static app.ColourConstants.WHITE;
+import static use_case.computer_guess.CommonTrigramFrequencies.commonTrigrams;
+
 /**
  * The interactor for the computer to make a guess, this interactor will look at the available words in the
  */
@@ -30,13 +33,13 @@ public class ComputerGuessInteractor implements ComputerGuessInputDataBoundary {
     /**
      * Score the answer bank of the gameDataAccessObject.
      */
-    private void scoreAnswerBank() {
+    public void scoreWordbank(List<Word> wordBank) {
 
         // Build the Frequency Maps of bigrams and letters to be used for the scoring system
-        Map<String, Integer> letterFrequency = charFrequency();
-        Map<String, Integer> bigramFrequency = bigramFrequency();
+        Map<String, Integer> letterFrequency = charFrequency(wordBank);
+        Map<String, Integer> bigramFrequency = bigramFrequency(wordBank);
 
-        for (Word word : gameDataAccessObject.getAnswerBank()) {
+        for (Word word : wordBank) {
             int score = 0;
             for (String letter : word.getUniqueLetters()) {
                 score += letterFrequency.get(letter);
@@ -45,11 +48,22 @@ public class ComputerGuessInteractor implements ComputerGuessInputDataBoundary {
             for (String bigram : word.getUniqueBigrams()) {
 
                 // Later in the game bigram frequency should be wighed to be more imporant.
-                if (gameDataAccessObject.getTurn() > 2) {
-                    score += (int) Math.floor(bigramFrequency.get(bigram) * 1.5);
+                if (gameDataAccessObject.getTurn() <= 3) {
+                    score += bigramFrequency.get(bigram) * 2;
                 }
+
                 else {
                     score += bigramFrequency.get(bigram);
+                }
+            }
+
+            if (gameDataAccessObject.getTurn() < 4) {
+
+                for (String trigram : word.getUniqueTrigrams())  {
+
+                    if (commonTrigrams.contains(trigram)) {
+                        score += 100;
+                    }
                 }
             }
             word.setScore(score);
@@ -60,16 +74,21 @@ public class ComputerGuessInteractor implements ComputerGuessInputDataBoundary {
      * Collect the frequency that a Letter appears in all the word's in the gameDataAccessObject's answer bank.
      * @return a map that takes a letter to its frequency in the answerbank of the GameDataAccessObject.
      */
-    private Map<String, Integer> charFrequency() {
+    private Map<String, Integer> charFrequency(List<Word> wordBank) {
 
         Map<String, Integer> result = new HashMap<>();
-        for (Word word : gameDataAccessObject.getAnswerBank()) {
+        for (Word word : wordBank) {
             for (String letter: word.getUniqueLetters()) {
                 if (!result.containsKey(letter)) {
                     result.put(letter, 1);
                 }
                 else {
                     result.put(letter, result.get(letter) + 1);
+                }
+
+                if (gameDataAccessObject.getTurn() <= 3 &&
+                        gameDataAccessObject.getLetterBoard().get(letter.charAt(0)).getStatus() == WHITE) {
+                    result.put(letter, result.get(letter) + 9);
                 }
             }
         }
@@ -82,10 +101,10 @@ public class ComputerGuessInteractor implements ComputerGuessInputDataBoundary {
      * Collect the frequency that a bigram appears in all the word's in the gameDataAccessObject's answer bank.
      * @return a map that takes bigrams to their frequencies from a list of Words.
      */
-    private Map<String, Integer> bigramFrequency() {
+    private Map<String, Integer> bigramFrequency(List<Word> wordBank) {
 
         Map<String, Integer> result = new HashMap<>();
-        for (Word word : gameDataAccessObject.getAnswerBank()) {
+        for (Word word : wordBank) {
             for (String bigram: word.getUniqueBigrams()) {
                 if (!result.containsKey(bigram)) {
                     result.put(bigram, 1);
@@ -103,7 +122,7 @@ public class ComputerGuessInteractor implements ComputerGuessInputDataBoundary {
      * Find the highest score word in the GameDataAccessObject's answer bank.
      * @return a Word whose score is higher than (almost) every other Word in a list of Words.
      */
-    private Word getBestWord() {
+    private Word getBestWord(List<Word> wordBank) {
 
         Word result = null;
         for (Word word : gameDataAccessObject.getAnswerBank()) {
@@ -121,10 +140,10 @@ public class ComputerGuessInteractor implements ComputerGuessInputDataBoundary {
      * @return the Word in a list of words with the highest score that also has five unique letters, if there are no
      * such words return null.
      */
-    private Word getBestUniqueLetterWord() {
+    private Word getBestUniqueLetterWord(List<Word> wordBank) {
 
         Word result = null;
-        for (Word word : gameDataAccessObject.getAnswerBank()) {
+        for (Word word : wordBank) {
 
             if (!(word.fiveUniqueChars())) {
                 continue;
@@ -144,7 +163,7 @@ public class ComputerGuessInteractor implements ComputerGuessInputDataBoundary {
      * Makes a guess.
      * @return a Word to guess.
      */
-    private Word getGuess() {
+    public Word getGuess() {
 
         Word result = null;
 
@@ -152,17 +171,18 @@ public class ComputerGuessInteractor implements ComputerGuessInputDataBoundary {
             return gameDataAccessObject.getAnswerBank().getFirst();
         }
 
-        if (gameDataAccessObject.getTurn() <= 2) {
-            result = getBestUniqueLetterWord();
+        if (gameDataAccessObject.getTurn() <= 3) {
+            result = getBestUniqueLetterWord(gameDataAccessObject.getAnswerBank());
 
             // very unlikely edge-case that the first turn somehow removes all unique lettered words
             if (result == null) {
-                result = getBestWord();
+                result = getBestWord(gameDataAccessObject.getAnswerBank());
             }
             return result;
         }
 
-        result = getBestWord();
+        result = getBestWord(gameDataAccessObject.getAnswerBank());
+
 
         return result;
     }
@@ -174,12 +194,18 @@ public class ComputerGuessInteractor implements ComputerGuessInputDataBoundary {
         gameDataAccessObject.updateTurn();
 
         // Score the answer bank and make a guess
-        scoreAnswerBank();
+        scoreWordbank(gameDataAccessObject.getAnswerBank());
         Word result = getGuess();
 
         // Verify that guess with the answer of the game to return a list of statuses
         List<Integer> guessBoard = versusDataAccessObject.verifyGuess(result);
 
+        // Verify if the game has been won.
+        boolean hasWon = versusDataAccessObject.verifyGameWon(result);
+
+        if (hasWon) {
+            gameDataAccessObject.gameWon();
+        }
         // Update the current game board.
         for (int i = 0; i < guessBoard.size(); i++) {
 
@@ -188,5 +214,12 @@ public class ComputerGuessInteractor implements ComputerGuessInputDataBoundary {
 
         // Update possible answers to this game.
         gameDataAccessObject.updateAnswerBank(guessBoard, result);
+
+        // Update the board log to keep track of the game's previous turns and initialize output data to be sent to the
+        // Presenter.
+        gameDataAccessObject.updateBoardLog(result, guessBoard);
+        ComputerGuessOutputData outputData = new ComputerGuessOutputData(gameDataAccessObject.getBoardLog(),
+                gameDataAccessObject.isGameOn(), gameDataAccessObject.getTurn());
+        computerGuessOutputDataBoundary.preparePostGuessView(outputData);
     }
 }

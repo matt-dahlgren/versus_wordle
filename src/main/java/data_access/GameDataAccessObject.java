@@ -17,12 +17,20 @@ import static app.ColourConstants.*;
 public class GameDataAccessObject {
 
     private final ArrayList<Word> answerBank;
-    private final ArrayList<String> guessBank;
+    private final ArrayList<Word> guessBank;
     private final Map<Character, Letter> letterBoard;
-    private final ArrayList<String> guessedWords;
+    private final ArrayList<Word> guessedWords;
     private int turn;
+    private final Map<Integer, Map<Word,List<Integer>>> boardLog;
+    private boolean gameOn;
 
     public GameDataAccessObject() {
+
+        // Games are initialized as not won.
+        this.gameOn = false;
+
+        // Initializes the board log.
+        this.boardLog = new HashMap<>();
 
         // Initializes the turn counter.
         turn = 0;
@@ -76,7 +84,8 @@ public class GameDataAccessObject {
             while (answerReader.hasNextLine()) {
                 // Reads lines of this file until the end and adds new words to our answer bank.
                 String line = answerReader.nextLine();
-                guessBank.add(line);
+                Word newWord = new Word(line, letterBoard);
+                guessBank.add(newWord);
             }
         }
         catch (FileNotFoundException e) {
@@ -100,7 +109,7 @@ public class GameDataAccessObject {
         return turn;
     }
 
-    public List<String> getGuessedWords() {
+    public List<Word> getGuessedWords() {
         return guessedWords;
     }
 
@@ -143,7 +152,8 @@ public class GameDataAccessObject {
         // remove all answers remaining that have grey letters.
         answerBank.removeIf(Word::hasGreyLetter);
 
-        for (Word word : answerBank) {
+        List<Word> copyOfBank = new ArrayList<>(answerBank);
+        for (Word word : copyOfBank) {
             for (int i = 0; i < 5; i++) {
 
                 // If this letter is Grey or LightBlue at this index or if this index is found to be Blue through a
@@ -156,13 +166,34 @@ public class GameDataAccessObject {
                 }
             }
         }
+
+        answerBank.remove(guess);
     }
 
     /**
      * This is to be used after player guesses this word to remove it from the guess bank.
      * @param guess is a string word that has been proven to already be in the guess bank.
      */
-    public void updateGuessBank(String guess) {
+    public void updateGuessBank(List<Integer> updatedBoard, Word guess) {
+
+        // remove all answers remaining that have grey letters.
+        guessBank.removeIf(Word::hasGreyLetter);
+
+        List<Word> copyOfBank = new ArrayList<>(guessBank);
+        for (Word word : copyOfBank) {
+            for (int i = 0; i < 5; i++) {
+
+                // If this letter is Grey or LightBlue at this index or if this index is found to be Blue through a
+                // guess where the letter at the index of this Blue letter of this word is not equal to the letter of
+                // the guess at this index remove this word from the answer bank.
+                if (word.getBoard().get(i).getGreyIndices().contains(i) ||
+                        word.getBoard().get(i).getLightBlueIndices().contains(i) ||
+                        updatedBoard.get(i) == BLUE && !guess.getLiterals().get(i).equals(word.getLiterals().get(i))) {
+                    guessBank.remove(word);
+                }
+            }
+        }
+
         guessBank.remove(guess);
         guessedWords.add(guess);
     }
@@ -174,11 +205,73 @@ public class GameDataAccessObject {
      */
     public boolean validGuess(String target) {
 
-        for (String word : guessBank) {
-            if (Objects.equals(word, target)) {
+        for (Word word : guessBank) {
+            if (Objects.equals(word.getLiteral(), target)) {
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * After a turn is played update the board log, this is used to update the view and keep track of previous board
+     * states throughout the game.
+     * @param guess is a Word and has not been guessed yet.
+     * @param boardColours is a List of numbers element of {-1, 1, 2}.
+     */
+    public void updateBoardLog(Word guess, List<Integer> boardColours) {
+
+        Map<Word, List<Integer>> result = new HashMap<>();
+        result.put(guess, boardColours);
+        boardLog.put(turn, result);
+    }
+
+    /**
+     * The getter for the boardLog instance attribute.
+     * @return A Map that holds turn numbers to their respective guess and board format.
+     */
+    public Map<Integer,Map<Word, List<Integer>>> getBoardLog() {
+
+        return boardLog;
+    }
+
+    /**
+     * Change the status of this game to Won.
+     */
+    public void gameWon() {
+
+        gameOn = true;
+    }
+
+    /**
+     * Get game status.
+     * @return True iff this game has been won.
+     */
+    public boolean isGameOn() {
+        return gameOn;
+    }
+
+    /**
+     * For testing purposes to find out what is left of the answer bank.
+     * @return a list of strings representing the words left in the answer bank.
+     */
+    public List<String> getAnswerLiterals() {
+
+        List<String> result = new ArrayList<>();
+
+        for (Word word : answerBank) {
+            result.add(word.getLiteral());
+        }
+
+        return result;
+    }
+
+    public Map<Character, Letter> getLetterBoard() {
+
+        return letterBoard;
+    }
+
+    public List<Word> getGuessBank() {
+        return guessBank;
     }
 }
