@@ -1,4 +1,12 @@
 package interface_adapter.user_guess;
 
-public class UserGuessViewModel {
+import interface_adapter.ViewModel;
+import interface_adapter.computer_guess.ComputerGuessState;
+
+public class UserGuessViewModel extends ViewModel<UserGuessState> {
+
+    public UserGuessViewModel() {
+        super("user_guess");
+        setState(new UserGuessState());
+    }
 }

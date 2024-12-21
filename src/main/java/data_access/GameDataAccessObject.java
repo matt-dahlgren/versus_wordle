@@ -172,27 +172,9 @@ public class GameDataAccessObject {
 
     /**
      * This is to be used after player guesses this word to remove it from the guess bank.
-     * @param guess is a string word that has been proven to already be in the guess bank.
+     * @param guess is a word that has been proven to already be in the guess bank.
      */
-    public void updateGuessBank(List<Integer> updatedBoard, Word guess) {
-
-        // remove all answers remaining that have grey letters.
-        guessBank.removeIf(Word::hasGreyLetter);
-
-        List<Word> copyOfBank = new ArrayList<>(guessBank);
-        for (Word word : copyOfBank) {
-            for (int i = 0; i < 5; i++) {
-
-                // If this letter is Grey or LightBlue at this index or if this index is found to be Blue through a
-                // guess where the letter at the index of this Blue letter of this word is not equal to the letter of
-                // the guess at this index remove this word from the answer bank.
-                if (word.getBoard().get(i).getGreyIndices().contains(i) ||
-                        word.getBoard().get(i).getLightBlueIndices().contains(i) ||
-                        updatedBoard.get(i) == BLUE && !guess.getLiterals().get(i).equals(word.getLiterals().get(i))) {
-                    guessBank.remove(word);
-                }
-            }
-        }
+    public void updateGuessBank(Word guess) {
 
         guessBank.remove(guess);
         guessedWords.add(guess);

@@ -11,7 +11,7 @@ import java.util.Map;
 public class ComputerGuessOutputData {
 
     private final Map<Integer, Map<Word, List<Integer>>> computerGuesses;
-    private boolean isWon;
+    private final boolean isWon;
     private final int turn;
 
     public ComputerGuessOutputData(Map<Integer, Map<Word, List<Integer>>> computerGuesses, boolean isWon, int turn) {

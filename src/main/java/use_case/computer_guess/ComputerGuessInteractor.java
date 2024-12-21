@@ -66,6 +66,7 @@ public class ComputerGuessInteractor implements ComputerGuessInputDataBoundary {
                     }
                 }
             }
+
             word.setScore(score);
         }
     }
@@ -125,7 +126,7 @@ public class ComputerGuessInteractor implements ComputerGuessInputDataBoundary {
     private Word getBestWord(List<Word> wordBank) {
 
         Word result = null;
-        for (Word word : gameDataAccessObject.getAnswerBank()) {
+        for (Word word : wordBank) {
             if (result == null || word.getScore() > result.getScore()) {
                 result = word;
             }
@@ -165,7 +166,7 @@ public class ComputerGuessInteractor implements ComputerGuessInputDataBoundary {
      */
     public Word getGuess() {
 
-        Word result = null;
+        Word result;
 
         if (gameDataAccessObject.getAnswerBank().size() == 1) {
             return gameDataAccessObject.getAnswerBank().getFirst();
@@ -187,6 +188,7 @@ public class ComputerGuessInteractor implements ComputerGuessInputDataBoundary {
         return result;
     }
 
+    // TODO: handle sub case where the computer wins to take the user to the "Loss Screen"
     @Override
     public void execute() {
 
