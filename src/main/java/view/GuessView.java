@@ -11,7 +11,7 @@ public class GuessView extends JPanel {
     public GuessView() {
 
         setLayout(new GridLayout(6, 5));
-        setBackground(ColourConstants.DARKPURPLE);
+        setBackground(ColourConstants.LIGHTGREEN);
     }
 
     /**

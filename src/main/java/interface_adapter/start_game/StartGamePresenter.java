@@ -1,4 +1,6 @@
 package interface_adapter.start_game;
 
-public class StartGamePresenter {
+import use_case.start_game.StartGameOutputBoundary;
+
+public class StartGamePresenter implements StartGameOutputBoundary {
 }

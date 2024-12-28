@@ -24,7 +24,7 @@ public class ColourConstants {
     public static final int BLUE = 2;
     public static final Color BLUE_TILE = new Color(100, 149, 237);
 
-    //BACKGROUND - a light purple
-    public static final Color PURPLE = new Color(221, 160, 221);
-    public static Color DARKPURPLE = new Color(221, 140, 221);
+    //BACKGROUND - forest green
+    public static final Color GREEN = new Color(74, 103, 65);
+    public static Color LIGHTGREEN = new Color(95, 114, 93);
 }

@@ -12,7 +12,7 @@ public class KeyboardView extends JPanel {
 
     public KeyboardView() {
 
-        setBackground(ColourConstants.PURPLE);
+        setBackground(ColourConstants.GREEN);
         setLayout(new GridLayout(3,1));
 
         // initializing the font and panels that will be added to this panel later
@@ -21,9 +21,9 @@ public class KeyboardView extends JPanel {
         JPanel middleLayer = new JPanel(new FlowLayout());
         JPanel bottomLayer = new JPanel(new FlowLayout());
 
-        topLayer.setBackground(ColourConstants.PURPLE);
-        middleLayer.setBackground(ColourConstants.PURPLE);
-        bottomLayer.setBackground(ColourConstants.PURPLE);
+        topLayer.setBackground(ColourConstants.GREEN);
+        middleLayer.setBackground(ColourConstants.GREEN);
+        bottomLayer.setBackground(ColourConstants.GREEN);
 
         // TODO: Not sure how to access these buttons if even possible, none of them have names, but this is something
         //  I can worry about later, maybe I could introduce a characterButton class who looks the same as below but an
