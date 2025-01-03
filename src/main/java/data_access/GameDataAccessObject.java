@@ -21,7 +21,7 @@ public class GameDataAccessObject {
     private final Map<Character, Letter> letterBoard;
     private final ArrayList<Word> guessedWords;
     private int turn;
-    private final Map<Integer, Map<Word,List<Integer>>> boardLog;
+    private final Map<Word,List<Integer>> boardLog;
     private boolean gameOn;
 
     public GameDataAccessObject() {
@@ -203,16 +203,14 @@ public class GameDataAccessObject {
      */
     public void updateBoardLog(Word guess, List<Integer> boardColours) {
 
-        Map<Word, List<Integer>> result = new HashMap<>();
-        result.put(guess, boardColours);
-        boardLog.put(turn, result);
+        boardLog.put(guess, boardColours);
     }
 
     /**
      * The getter for the boardLog instance attribute.
      * @return A Map that holds turn numbers to their respective guess and board format.
      */
-    public Map<Integer,Map<Word, List<Integer>>> getBoardLog() {
+    public Map<Word, List<Integer>> getBoardLog() {
 
         return boardLog;
     }

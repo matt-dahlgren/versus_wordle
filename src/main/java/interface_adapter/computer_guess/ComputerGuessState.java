@@ -10,13 +10,24 @@ import java.util.Map;
  */
 public class ComputerGuessState {
 
-    private Map<Integer, Map<Word, List<Integer>>> currentDisplayedBoard;
+    private Map<Word, List<Integer>> currentDisplayedBoard;
+    private Map<Word, List<Integer>> playerBoard;
 
-    public void setCurrentDisplayedBoard(Map<Integer, Map<Word, List<Integer>>> currentDisplayedBoard) {
+    public void setCurrentDisplayedBoard(Map<Word, List<Integer>> currentDisplayedBoard) {
         this.currentDisplayedBoard = currentDisplayedBoard;
     }
 
-    public Map<Integer, Map<Word, List<Integer>>> getCurrentDisplayedBoard() {
+    public Map<Word, List<Integer>> getCurrentDisplayedBoard() {
         return currentDisplayedBoard;
+    }
+
+    public void setPlayerBoard(Map<Word, List<Integer>> playerBoard) {
+
+        this.playerBoard = playerBoard;
+    }
+
+    public Map<Word, List<Integer>> getPlayerBoard() {
+
+        return playerBoard;
     }
 }

@@ -1,30 +1,40 @@
 package use_case.start_game;
 
-import data_access.GameDataAccessObject;
-import data_access.VersusDataAccessObject;
+import entities.Letter;
+import entities.Word;
+
+import java.util.List;
+import java.util.Map;
 
 /**
- * Output Data of the start game use case.
+ * Output data for building the view of starting a game.
  */
 public class StartGameOutputData {
 
-    private final GameDataAccessObject gameDataAccessObject;
-    private final VersusDataAccessObject versusDataAccessObject;
+    private final Map<Word, List<Integer>> computerGuesses;
+    private final Map<Word, List<Integer>> playerGuesses;
+    private final Map<Character, Letter> letterMap;
 
-    public StartGameOutputData(GameDataAccessObject gameDataAccessObject,
-                               VersusDataAccessObject versusDataAccessObject) {
+    public StartGameOutputData(Map<Word, List<Integer>> computerGuesses, Map<Word, List<Integer>> playerGuesses,
+                               Map<Character, Letter> letterMap) {
 
-        this.gameDataAccessObject = gameDataAccessObject;
-        this.versusDataAccessObject = versusDataAccessObject;
+        this.computerGuesses = computerGuesses;
+        this.playerGuesses = playerGuesses;
+        this.letterMap = letterMap;
     }
 
-    public GameDataAccessObject getGameDataAccessObject() {
+    public Map<Word, List<Integer>> getComputerGuesses() {
 
-        return gameDataAccessObject;
+        return computerGuesses;
     }
 
-    public VersusDataAccessObject getVersusDataAccessObject() {
+    public Map<Word, List<Integer>> getPlayerGuesses() {
 
-        return versusDataAccessObject;
+        return playerGuesses;
+    }
+
+    public Map<Character, Letter> getLetterMap() {
+
+        return letterMap;
     }
 }

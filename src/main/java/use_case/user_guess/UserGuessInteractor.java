@@ -12,16 +12,19 @@ import java.util.List;
 public class UserGuessInteractor implements UserGuessInputDataBoundary{
 
     private final GameDataAccessObject gameDataAccessObject;
+    private final GameDataAccessObject computerDataAccessObject;
     private final VersusDataAccessObject versusDataAccessObject;
     private final UserGuessOutputDataBoundary userGuessPresenter;
 
     public UserGuessInteractor(GameDataAccessObject gameDataAccessObject,
+                               GameDataAccessObject playerDataAccessObject,
                                VersusDataAccessObject versusDataAccessObject,
                                UserGuessOutputDataBoundary userGuessPresenter) {
 
         this.gameDataAccessObject = gameDataAccessObject;
         this.versusDataAccessObject = versusDataAccessObject;
         this.userGuessPresenter = userGuessPresenter;
+        this.computerDataAccessObject = playerDataAccessObject;
     }
 
     @Override
@@ -71,21 +74,17 @@ public class UserGuessInteractor implements UserGuessInputDataBoundary{
                 }
 
                 UserGuessOutputData outputData = new UserGuessOutputData(gameDataAccessObject.getBoardLog(),
-                        gameDataAccessObject.isGameOn(), gameDataAccessObject.getTurn());
+                        computerDataAccessObject.getBoardLog(), gameDataAccessObject.isGameOn(),
+                        gameDataAccessObject.getTurn(), gameDataAccessObject.getLetterBoard());
 
-                if (gameDataAccessObject.isGameOn()) {
-
-                    userGuessPresenter.prepareWinView(outputData);
-                }
-
-                else if (gameDataAccessObject.getTurn() < 6) {
+                if (!gameDataAccessObject.isGameOn()) {
 
                     userGuessPresenter.preparePostGuessView(outputData);
                 }
 
                 else {
 
-                    userGuessPresenter.prepareLoseView(outputData);
+                    userGuessPresenter.prepareWinView(outputData);
                 }
             }
         }
@@ -95,7 +94,8 @@ public class UserGuessInteractor implements UserGuessInputDataBoundary{
             // the user's guess is not a valid guess, so we reset the view of the player without altering anything,
             // including turn number, board or any banks.
             UserGuessOutputData outputData = new UserGuessOutputData(gameDataAccessObject.getBoardLog(),
-                    gameDataAccessObject.isGameOn(), gameDataAccessObject.getTurn());
+                    computerDataAccessObject.getBoardLog(), gameDataAccessObject.isGameOn(),
+                    gameDataAccessObject.getTurn(), gameDataAccessObject.getLetterBoard());
             userGuessPresenter.preparePostGuessView(outputData);
         }
     }

@@ -1,6 +1,9 @@
 package view;
 
 import app.ColourConstants;
+import entities.Word;
+import interface_adapter.computer_guess.ComputerGuessState;
+import interface_adapter.computer_guess.ComputerGuessViewModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,11 +15,11 @@ public class ComputerGuessView extends JPanel {
 
     private final String viewName = "ComputerGuessView";
 
-    public ComputerGuessView(Map<String, List<Integer>> pastBoards) {
+    public ComputerGuessView(Map<Word, List<Integer>> guesses) {
 
         setBackground(ColourConstants.GREEN);
         setLayout(new GridLayout(1,7));
-        List<List<Integer>> boardCollection = new ArrayList<>(pastBoards.values());
+        List<List<Integer>> boardCollection = new ArrayList<>(guesses.values());
 
         // Add Computer's previous guesses
         int size = boardCollection.size();

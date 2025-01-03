@@ -10,13 +10,16 @@ import java.util.Map;
  */
 public class ComputerGuessOutputData {
 
-    private final Map<Integer, Map<Word, List<Integer>>> computerGuesses;
+    private final Map<Word, List<Integer>> computerGuesses;
+    private final Map<Word, List<Integer>> playerGuesses;
     private final boolean isWon;
     private final int turn;
 
-    public ComputerGuessOutputData(Map<Integer, Map<Word, List<Integer>>> computerGuesses, boolean isWon, int turn) {
+    public ComputerGuessOutputData(Map<Word, List<Integer>> computerGuesses,
+                                   Map<Word, List<Integer>> playerGuesses, boolean isWon, int turn) {
 
         this.computerGuesses = computerGuesses;
+        this.playerGuesses = playerGuesses;
         this.isWon = isWon;
         this.turn = turn;
     }
@@ -25,9 +28,14 @@ public class ComputerGuessOutputData {
      * Get the computer's guess for this turn.
      * @return a Word corresponding to this Computer's guess.
      */
-    public Map<Integer, Map<Word, List<Integer>>> getComputerGuess() {
+    public Map<Word, List<Integer>> getComputerGuess() {
 
         return computerGuesses;
+    }
+
+    public Map<Word, List<Integer>> getPlayerGuess() {
+
+        return playerGuesses;
     }
 
     /**

@@ -1,5 +1,6 @@
 package use_case.user_guess;
 
+import entities.Letter;
 import entities.Word;
 
 import java.util.List;
@@ -10,20 +11,26 @@ import java.util.Map;
  */
 public class UserGuessOutputData {
 
-    private final Map<Integer, Map<Word, List<Integer>>> userGuesses;
+    private final Map<Word, List<Integer>> userGuesses;
+    private final Map<Word, List<Integer>> cpuGuesses;
     private final boolean isWon;
     private final int turn;
+    private final Map<Character, Letter> letterBoard;
 
-    public UserGuessOutputData(Map<Integer, Map<Word, List<Integer>>> userGuesses, boolean isWon, int turn) {
+    public UserGuessOutputData(Map<Word, List<Integer>> userGuesses,
+                               Map<Word, List<Integer>> cpuGuesses, boolean isWon, int turn,
+                               Map<Character, Letter> letterBoard) {
 
         this.userGuesses = userGuesses;
         this.isWon = isWon;
         this.turn = turn;
+        this.letterBoard = letterBoard;
+        this.cpuGuesses = cpuGuesses;
     }
 
     // Getter functions for the user guess outputData.
 
-    public Map<Integer, Map<Word, List<Integer>>> getUserGuesses() {
+    public Map<Word, List<Integer>> getUserGuesses() {
         return userGuesses;
     }
 
@@ -33,5 +40,14 @@ public class UserGuessOutputData {
 
     public int getTurn() {
         return turn;
+    }
+
+    public Map<Word, List<Integer>> getCpuGuesses() {
+        return cpuGuesses;
+    }
+
+    public Map<Character, Letter> getLetterBoard() {
+
+        return letterBoard;
     }
 }

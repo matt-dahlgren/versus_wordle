@@ -6,6 +6,7 @@ import entities.Word;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.computer_guess.ComputerGuessPresenter;
 import interface_adapter.computer_guess.ComputerGuessViewModel;
+import interface_adapter.end_of_game.EndGameViewModel;
 import org.junit.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -18,11 +19,13 @@ public class ComputerGuessInteractorAnswerTest {
 
         ViewManagerModel vm = new ViewManagerModel();
         ComputerGuessViewModel vmModel = new ComputerGuessViewModel();
+        EndGameViewModel vmModel2 = new EndGameViewModel();
         GameDataAccessObject gameDataAccessObject = new GameDataAccessObject();
+        GameDataAccessObject playerData = new GameDataAccessObject();
         Word pizza = new Word("wooer");
         VersusDataAccessObject versusDataAccessObject = new VersusDataAccessObject("wooer");
-        ComputerGuessOutputDataBoundary outputDataBoundary = new ComputerGuessPresenter(vm, vmModel);
-        ComputerGuessInteractor testGuess = new ComputerGuessInteractor(gameDataAccessObject,
+        ComputerGuessOutputDataBoundary outputDataBoundary = new ComputerGuessPresenter(vm, vmModel, vmModel2);
+        ComputerGuessInteractor testGuess = new ComputerGuessInteractor(gameDataAccessObject, playerData,
                 versusDataAccessObject, outputDataBoundary);
 
         // mimic the interactor of the computerGuess

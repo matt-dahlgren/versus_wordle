@@ -6,6 +6,7 @@ import entities.Word;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.computer_guess.ComputerGuessPresenter;
 import interface_adapter.computer_guess.ComputerGuessViewModel;
+import interface_adapter.end_of_game.EndGameViewModel;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -26,8 +27,9 @@ public class ComputerGuessEachAnswerTest {
         int answerBankLength = answerBank.getAnswerBank().size();
         List<String> notAnswered = new ArrayList<>();
         ViewManagerModel vm = new ViewManagerModel();
+        EndGameViewModel vm2 = new EndGameViewModel();
         ComputerGuessViewModel vmModel = new ComputerGuessViewModel();
-        ComputerGuessOutputDataBoundary outputDataBoundary = new ComputerGuessPresenter(vm, vmModel);
+        ComputerGuessOutputDataBoundary outputDataBoundary = new ComputerGuessPresenter(vm, vmModel, vm2);
         int wins = 0;
         int turns = 0;
 
@@ -35,7 +37,7 @@ public class ComputerGuessEachAnswerTest {
 
             GameDataAccessObject gameDataAccessObject = new GameDataAccessObject();
             VersusDataAccessObject versusDataAccessObject = new VersusDataAccessObject(answer.getLiteral());
-            ComputerGuessInteractor testGuess = new ComputerGuessInteractor(gameDataAccessObject,
+            ComputerGuessInteractor testGuess = new ComputerGuessInteractor(gameDataAccessObject, answerBank,
                     versusDataAccessObject, outputDataBoundary);
 
             // mimic the interactor of the computerGuess

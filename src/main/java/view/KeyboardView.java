@@ -1,9 +1,15 @@
 package view;
 
 import app.ColourConstants;
+import entities.Letter;
+import interface_adapter.user_guess.UserGuessState;
+import interface_adapter.user_guess.UserGuessViewModel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The view that manages the Keyboard View.
@@ -12,7 +18,7 @@ public class KeyboardView extends JPanel {
 
     private final String viewName = "KeyboardView";
 
-    public KeyboardView() {
+    public KeyboardView(Map<Character, Letter> letterBoard) {
 
         setBackground(ColourConstants.GREEN);
         setLayout(new GridLayout(4,1));
@@ -39,12 +45,13 @@ public class KeyboardView extends JPanel {
         textLayer.add(enterButton);
 
 
-        // TODO: add a way to get the board colour for the buttons!
         // Add the letter buttons to use on the keyboard
         int letterCount = 1;
         for (char letter = 'a'; letter <= 'z'; letter++) {
 
-            LetterButton letterButton = new LetterButton(letter, times);
+            int letterColour = letterBoard.get(letter).getStatus();
+            LetterButton letterButton = getLetterButton(letterColour, letter, times);
+
             letterButton.addActionListener(e -> {textField.setText(textField.getText() + letterButton.getLetter());
             });
             if (letterCount < 10) {
@@ -64,6 +71,33 @@ public class KeyboardView extends JPanel {
         add(topLayer);
         add(middleLayer);
         add(bottomLayer);
+    }
+
+    @NotNull
+    private static LetterButton getLetterButton(int letterColour, char letter, Font times) {
+        Color buttonColour;
+
+        if (letterColour == ColourConstants.BLUE) {
+
+            buttonColour = ColourConstants.BLUE_TILE;
+        }
+
+        else if (letterColour == ColourConstants.LIGHTBLUE) {
+
+            buttonColour = ColourConstants.LIGHTBLUE_TILE;
+        }
+
+        else if (letterColour == ColourConstants.WHITE) {
+
+            buttonColour = ColourConstants.WHITE_TILE;
+        }
+
+        else {
+
+            buttonColour = ColourConstants.GREY_TILE;
+        }
+
+        return new LetterButton(letter, times, buttonColour);
     }
 
     public String getViewName() {

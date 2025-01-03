@@ -1,4 +1,12 @@
 package interface_adapter.start_game;
 
-public class StartGameViewModel {
+import interface_adapter.ViewModel;
+import interface_adapter.to_main_menu.MainMenuState;
+
+public class StartGameViewModel extends ViewModel<StartGameState> {
+
+    public StartGameViewModel() {
+        super("SoloPlayState");
+        setState(new StartGameState());
+    }
 }

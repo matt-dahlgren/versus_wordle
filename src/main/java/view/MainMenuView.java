@@ -1,6 +1,8 @@
 package view;
 
 import app.ColourConstants;
+import interface_adapter.start_game.StartGameController;
+import interface_adapter.to_main_menu.MainMenuViewModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,8 +10,9 @@ import java.awt.*;
 public class MainMenuView extends JPanel {
 
     private final String viewName = "MainMenu";
+    private StartGameController startGameController;
 
-    public MainMenuView() {
+    public MainMenuView(MainMenuViewModel mainMenuViewModel) {
 
         setLayout(new GridLayout(5,1));
         setBackground(ColourConstants.GREEN);
@@ -81,5 +84,10 @@ public class MainMenuView extends JPanel {
     public String getViewName() {
 
         return viewName;
+    }
+
+    public void setMainMenuController(StartGameController startGameController) {
+
+        this.startGameController = startGameController;
     }
 }

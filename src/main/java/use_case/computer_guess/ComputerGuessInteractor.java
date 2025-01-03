@@ -17,14 +17,17 @@ import static use_case.computer_guess.CommonTrigramFrequencies.commonTrigrams;
 public class ComputerGuessInteractor implements ComputerGuessInputDataBoundary {
 
     private final GameDataAccessObject gameDataAccessObject;
+    private final GameDataAccessObject playerDataAccessObject;
     private final VersusDataAccessObject versusDataAccessObject;
     private final ComputerGuessOutputDataBoundary computerGuessOutputDataBoundary;
 
     public ComputerGuessInteractor(GameDataAccessObject gameDataAccessObject,
+                                   GameDataAccessObject playerDataAccessObject,
                                    VersusDataAccessObject versusDataAccessObject,
                                    ComputerGuessOutputDataBoundary computerGuessOutputDataBoundary) {
 
         this.gameDataAccessObject = gameDataAccessObject;
+        this.playerDataAccessObject = playerDataAccessObject;
         this.versusDataAccessObject = versusDataAccessObject;
         this.computerGuessOutputDataBoundary = computerGuessOutputDataBoundary;
 
@@ -221,7 +224,16 @@ public class ComputerGuessInteractor implements ComputerGuessInputDataBoundary {
         // Presenter.
         gameDataAccessObject.updateBoardLog(result, guessBoard);
         ComputerGuessOutputData outputData = new ComputerGuessOutputData(gameDataAccessObject.getBoardLog(),
-                gameDataAccessObject.isGameOn(), gameDataAccessObject.getTurn());
-        computerGuessOutputDataBoundary.preparePostGuessView(outputData);
+                playerDataAccessObject.getBoardLog(), gameDataAccessObject.isGameOn(), gameDataAccessObject.getTurn());
+
+        // change view to post game if computer has won.
+        if (gameDataAccessObject.isGameOn() || gameDataAccessObject.getTurn() == 6) {
+
+            computerGuessOutputDataBoundary.prepareComputerWinView(outputData);
+        }
+
+        else {
+            computerGuessOutputDataBoundary.preparePostGuessView(outputData);
+        }
     }
 }

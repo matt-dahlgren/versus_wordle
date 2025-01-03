@@ -18,6 +18,14 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         final AppBuilder appBuilder = new AppBuilder();
         final JFrame application = appBuilder
+                .addEndOfGameView()
+                .addMainMenuView()
+                .addMainMenuView()
+                .addSoloPlayView()
+                .addComputerGuessUseCase()
+                .addStartGameUseCase()
+                .addUserGuessUseCase()
+                .addMainMenuUseCase()
                 .build();
 
         application.pack();

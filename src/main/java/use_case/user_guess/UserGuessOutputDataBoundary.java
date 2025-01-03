@@ -19,9 +19,4 @@ public interface UserGuessOutputDataBoundary {
      */
     void prepareWinView(UserGuessOutputData outputData);
 
-    /**
-     * Prepares the user's view after they have made a guess which is not right and they have used all of their turns.
-     * @param outputData is valid outputData and none of its attributes are null.
-     */
-    void prepareLoseView(UserGuessOutputData outputData);
 }

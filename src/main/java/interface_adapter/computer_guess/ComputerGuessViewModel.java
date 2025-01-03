@@ -5,7 +5,7 @@ import interface_adapter.ViewModel;
 public class ComputerGuessViewModel extends ViewModel<ComputerGuessState> {
 
     public ComputerGuessViewModel() {
-        super("computer_guess");
+        super("ComputerGuessView");
         setState(new ComputerGuessState());
     }
 }

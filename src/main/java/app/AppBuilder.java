@@ -5,6 +5,31 @@ import data_access.ColourFormatDataAccessObject;
 import data_access.GameDataAccessObject;
 import data_access.VersusDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.computer_guess.ComputerGuessController;
+import interface_adapter.computer_guess.ComputerGuessPresenter;
+import interface_adapter.computer_guess.ComputerGuessViewModel;
+import interface_adapter.end_of_game.EndGameViewModel;
+import interface_adapter.start_game.StartGameController;
+import interface_adapter.start_game.StartGamePresenter;
+import interface_adapter.start_game.StartGameViewModel;
+import interface_adapter.to_main_menu.MainMenuController;
+import interface_adapter.to_main_menu.MainMenuPresenter;
+import interface_adapter.to_main_menu.MainMenuViewModel;
+import interface_adapter.user_guess.UserGuessController;
+import interface_adapter.user_guess.UserGuessPresenter;
+import interface_adapter.user_guess.UserGuessViewModel;
+import use_case.computer_guess.ComputerGuessInputDataBoundary;
+import use_case.computer_guess.ComputerGuessInteractor;
+import use_case.computer_guess.ComputerGuessOutputDataBoundary;
+import use_case.start_game.StartGameInputBoundary;
+import use_case.start_game.StartGameInteractor;
+import use_case.start_game.StartGameOutputBoundary;
+import use_case.to_main_menu.MainMenuInputBoundary;
+import use_case.to_main_menu.MainMenuInteractor;
+import use_case.to_main_menu.MainMenuOutputBoundary;
+import use_case.user_guess.UserGuessInputDataBoundary;
+import use_case.user_guess.UserGuessInteractor;
+import use_case.user_guess.UserGuessOutputDataBoundary;
 import view.*;
 
 import javax.swing.*;
@@ -29,12 +54,120 @@ public class AppBuilder {
     private final ColourFormatAccessInterface colourCodeDataAccessObject = new ColourFormatDataAccessObject();
 
     // Views
-    private GuessView guessView;
-    private KeyboardView keyboardView;
+    private EndOfGameView endOfGameView;
     private MainMenuView mainMenuView;
     private SoloPlayView soloPlayView;
 
+    // View Models
+    private ComputerGuessViewModel computerGuessViewModel;
+    private StartGameViewModel startGameViewModel;
+    private MainMenuViewModel mainMenuViewModel;
+    private UserGuessViewModel userGuessViewModel;
+    private EndGameViewModel endGameViewModel;
+
     public AppBuilder() throws FileNotFoundException {}
+
+    // Building Views
+
+    /**
+     * Adds the End of game view to the application.
+     * @return the end of game view builder.
+     */
+    public AppBuilder addEndOfGameView() {
+
+        computerGuessViewModel = new ComputerGuessViewModel();
+        userGuessViewModel = new UserGuessViewModel();
+        endOfGameView = new EndOfGameView(computerGuessViewModel);
+        endOfGameView = new EndOfGameView(userGuessViewModel);
+        return this;
+    }
+
+    /**
+     * Adds the Main Menu view to the application.
+     * @return the end of game view builder.
+     */
+    public AppBuilder addMainMenuView() {
+
+        mainMenuViewModel = new MainMenuViewModel();
+        mainMenuView = new MainMenuView(mainMenuViewModel);
+        return this;
+    }
+
+    /**
+     * Adds the Play view to the application.
+     * @return the play view builder.
+     */
+    public AppBuilder addSoloPlayView() {
+
+        userGuessViewModel = new UserGuessViewModel();
+        computerGuessViewModel = new ComputerGuessViewModel();
+        soloPlayView = new SoloPlayView(computerGuessViewModel, userGuessViewModel);
+        return this;
+    }
+
+    // Add Use-Cases
+
+    /**
+     * Adds the computer guess use case to the application.
+     * @return the computer guess use case builder.
+     */
+    public AppBuilder addComputerGuessUseCase() {
+
+        final ComputerGuessOutputDataBoundary computerGuessPresenter = new ComputerGuessPresenter(viewManagerModel,
+                computerGuessViewModel, endGameViewModel);
+        final ComputerGuessInputDataBoundary computerGuessInteracor = new ComputerGuessInteractor(
+                computerGameDataAccessObject, playerGameDataAccessObject, versusGameDataAccessObject,
+                computerGuessPresenter);
+
+        final ComputerGuessController computerGuessController = new ComputerGuessController(computerGuessInteracor);
+        soloPlayView.setComputerGuessController(computerGuessController);
+
+        return this;
+    }
+
+    /**
+     * Adds the start game use case to the application.
+     * @return the start game use case builder.
+     */
+    public AppBuilder addStartGameUseCase() {
+
+        final StartGameOutputBoundary startGamePresenter = new StartGamePresenter(viewManagerModel, startGameViewModel);
+        final StartGameInputBoundary startGameInteracor = new StartGameInteractor(computerGameDataAccessObject,
+                playerGameDataAccessObject, versusGameDataAccessObject, startGamePresenter);
+
+        final StartGameController startGameController = new StartGameController(startGameInteracor);
+        mainMenuView.setMainMenuController(startGameController);
+        return this;
+    }
+
+    /**
+     * Adds the to main menu use case to the application.
+     * @return the main menu use case builder.
+     */
+    public AppBuilder addMainMenuUseCase() {
+
+        final MainMenuOutputBoundary mainMenuPresenter = new MainMenuPresenter(mainMenuViewModel, viewManagerModel);
+        final MainMenuInputBoundary mainMenuInteractor = new MainMenuInteractor(mainMenuPresenter);
+
+        final MainMenuController mainMenuController = new MainMenuController(mainMenuInteractor);
+
+        soloPlayView.setMainMenuController(mainMenuController);
+        endOfGameView.setMainMenuController(mainMenuController);
+        return this;
+    }
+
+    public AppBuilder addUserGuessUseCase() {
+
+        final UserGuessOutputDataBoundary userGuessPresenter = new UserGuessPresenter(viewManagerModel,
+                userGuessViewModel, endGameViewModel);
+        final UserGuessInputDataBoundary userGuessInteracor = new UserGuessInteractor(playerGameDataAccessObject,
+                computerGameDataAccessObject, versusGameDataAccessObject, userGuessPresenter);
+
+        final UserGuessController userGuessController = new UserGuessController(userGuessInteracor);
+
+        soloPlayView.setUserGuessController(userGuessController);
+        return this;
+    }
 
     public JFrame build() {
 

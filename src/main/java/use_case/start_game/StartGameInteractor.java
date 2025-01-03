@@ -9,13 +9,17 @@ import java.util.List;
 public class StartGameInteractor implements StartGameInputBoundary {
 
     private GameDataAccessObject gameDataAccessObject;
+    private GameDataAccessObject playerDataAccessObject;
     private VersusDataAccessObject versusDataAccessObject;
     private final StartGameOutputBoundary startGameController;
 
-    public StartGameInteractor(GameDataAccessObject gameDataAccessObject, VersusDataAccessObject versusDataAccessObject,
+    public StartGameInteractor(GameDataAccessObject gameDataAccessObject,
+                               GameDataAccessObject playerGameDataAccessObject,
+                               VersusDataAccessObject versusDataAccessObject,
                                StartGameOutputBoundary startGameController) {
 
         this.gameDataAccessObject = gameDataAccessObject;
+        this.playerDataAccessObject = playerGameDataAccessObject;
         this.versusDataAccessObject = versusDataAccessObject;
         this.startGameController = startGameController;
     }
@@ -66,7 +70,12 @@ public class StartGameInteractor implements StartGameInputBoundary {
     public void prepareNewGame() {
 
         gameDataAccessObject = new GameDataAccessObject();
+        playerDataAccessObject = new GameDataAccessObject();
         versusDataAccessObject = new VersusDataAccessObject(pickNewWord());
 
+        StartGameOutputData outputData = new StartGameOutputData(gameDataAccessObject.getBoardLog(),
+                playerDataAccessObject.getBoardLog(), playerDataAccessObject.getLetterBoard());
+
+        startGameController.prepareGameView(outputData);
     }
 }
