@@ -4,46 +4,36 @@ import app.ColourConstants;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
+import java.util.Map;
 
 public class SoloPlayView extends JPanel {
 
-    public SoloPlayView() {
+    private final String viewName = "SoloPlayView";
+
+    public SoloPlayView(Map<String, List<Integer>> computerBoards) {
 
         setLayout(new BorderLayout());
-        setBackground(ColourConstants.GREEN);
 
-        // add the keyboard of this game
-        JPanel keyBoard = new JPanel();
-        keyBoard.setBackground(ColourConstants.GREEN);
-        keyBoard.add(new KeyboardView());
-        add(keyBoard, BorderLayout.SOUTH);
+        // add the guess panel
+        add(new KeyboardView(), BorderLayout.SOUTH);
 
-        // set up the middle of the screen
-        JPanel middlePanel = new JPanel();
-        middlePanel.setBackground(ColourConstants.GREEN);
-        middlePanel.setLayout(new GridLayout(1, 3));
+        // add the centre panel with guess view in the middle
 
-        JPanel leftEmptyPanel = new JPanel();
-        leftEmptyPanel.setBackground(ColourConstants.GREEN);
-        middlePanel.add(leftEmptyPanel);
+        JPanel centrePanel = new JPanel(new GridLayout(1, 3));
 
-        middlePanel.add(new GuessView());
+        JPanel leftPanel = new JPanel();
+        leftPanel.setBackground(ColourConstants.GREEN);
+        JPanel rightPanel = new JPanel();
+        rightPanel.setBackground(ColourConstants.GREEN);
 
-        JPanel rightEmptyPanel = new JPanel();
-        rightEmptyPanel.setBackground(ColourConstants.GREEN);
-        middlePanel.add(rightEmptyPanel);
+        centrePanel.add(leftPanel);
+        centrePanel.add(new GuessView(), BorderLayout.CENTER);
+        centrePanel.add(rightPanel);
 
-        add(middlePanel, BorderLayout.CENTER);
+        add(centrePanel, BorderLayout.CENTER);
 
-        // add the Title card to this view
-        JPanel titlePanel = new JPanel(new FlowLayout());
-        titlePanel.setBackground(ColourConstants.GREEN);
-
-        JLabel titleLabel = new JLabel("Solo Game");
-        titleLabel.setFont(new Font("Times New Roman", Font.BOLD, 36));
-        titlePanel.setBackground(ColourConstants.GREEN);
-        titlePanel.add(titleLabel);
-
-        add(titlePanel, BorderLayout.NORTH);
+        // add a top panel, this houses to computer guess view
+        add(new ComputerGuessView(computerBoards), BorderLayout.PAGE_START);
     }
 }

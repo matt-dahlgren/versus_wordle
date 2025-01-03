@@ -17,14 +17,14 @@ public class Main {
      */
     public static void main(String[] args) throws FileNotFoundException {
         final AppBuilder appBuilder = new AppBuilder();
-        //final JFrame application = appBuilder
-        //        .build();
+        final JFrame application = appBuilder
+                .build();
 
-        //application.pack();
+        application.pack();
 
-        //application.setSize(WIDTH, HEIGHT);
+        application.setSize(WIDTH, HEIGHT);
 
-        //application.setVisible(true);
+        application.setVisible(true);
     }
 }
 

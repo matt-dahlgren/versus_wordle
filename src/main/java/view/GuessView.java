@@ -7,6 +7,8 @@ import java.awt.*;
 
 public class GuessView extends JPanel {
 
+    private final String viewName = "GuessView";
+
     // TODO: make a way to populate this list with correct colours. Maybe a list of Letters saved in the GDAO
     public GuessView() {
 
@@ -34,6 +36,7 @@ public class GuessView extends JPanel {
             charLabel.setFont(times);
             guess.add(charLabel);
         }
+
         else if (status == ColourConstants.BLUE) {
             guess.setBackground(ColourConstants.BLUE_TILE);
             setBackground(ColourConstants.BLUE_TILE);
@@ -42,6 +45,7 @@ public class GuessView extends JPanel {
             charLabel.setFont(times);
             guess.add(charLabel);
         }
+
         else {
             guess.setBackground(ColourConstants.LIGHTBLUE_TILE);
             setBackground(ColourConstants.LIGHTBLUE_TILE);
@@ -50,6 +54,7 @@ public class GuessView extends JPanel {
             charLabel.setFont(times);
             guess.add(charLabel);
         }
+
         return guess;
     }
 }

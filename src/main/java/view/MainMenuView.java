@@ -7,6 +7,8 @@ import java.awt.*;
 
 public class MainMenuView extends JPanel {
 
+    private final String viewName = "MainMenu";
+
     public MainMenuView() {
 
         setLayout(new GridLayout(5,1));
@@ -74,5 +76,10 @@ public class MainMenuView extends JPanel {
 
         bottomPanel.add(singleLineLabel, BorderLayout.SOUTH);
         add(bottomPanel);
+    }
+
+    public String getViewName() {
+
+        return viewName;
     }
 }
