@@ -4,26 +4,51 @@ import app.ColourConstants;
 import entities.Word;
 import interface_adapter.computer_guess.ComputerGuessState;
 import interface_adapter.computer_guess.ComputerGuessViewModel;
+import interface_adapter.start_game.StartGameState;
+import interface_adapter.to_main_menu.MainMenuController;
+import interface_adapter.to_main_menu.MainMenuState;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ComputerGuessView extends JPanel {
+public class ComputerGuessView extends JPanel implements ActionListener, PropertyChangeListener {
 
     private final String viewName = "ComputerGuessView";
+    private JButton exitButton;
+    private MainMenuController mainMenuController;
 
-    public ComputerGuessView(Map<Word, List<Integer>> guesses) {
+    public ComputerGuessView(Map<Integer,Map<Word, List<Integer>>> guesses) {
 
         setBackground(ColourConstants.GREEN);
         setLayout(new GridLayout(1,7));
-        List<List<Integer>> boardCollection = new ArrayList<>(guesses.values());
+
+        List<List<Integer>> boardCollection = new ArrayList<>();
+        int size;
+
+        if (guesses == null) {
+
+            size = 0;
+        }
+
+        else {
+
+            size = guesses.size();
+
+            for (int i = 1; i <= size; i++) {
+
+                List<Word> word = new ArrayList<>(guesses.get(i).keySet());
+                boardCollection.add(guesses.get(i).get(word.getFirst()));
+            }
+        }
 
         // Add Computer's previous guesses
-        int size = boardCollection.size();
-
         for (int i = 0; i < 7; i++) {
 
             if (i < size) {
@@ -40,7 +65,7 @@ public class ComputerGuessView extends JPanel {
         }
 
         // add an exit button
-        JButton exitButton = new JButton("Exit");
+        exitButton = new JButton("Exit");
         exitButton.setFont(new Font("Times New Roman", Font.BOLD, 20));
         add(exitButton);
     }
@@ -61,7 +86,7 @@ public class ComputerGuessView extends JPanel {
         }
 
         // add an exit button
-        JButton exitButton = new JButton("Exit");
+        exitButton = new JButton("Exit");
         exitButton.setFont(new Font("Times New Roman", Font.BOLD, 20));
         add(exitButton);
     }
@@ -96,8 +121,31 @@ public class ComputerGuessView extends JPanel {
         return result;
     }
 
+    public void setMainMenuController(MainMenuController mainMenuController) {
+
+        this.mainMenuController = mainMenuController;
+
+        exitButton.addActionListener(e -> {
+            if (e.getSource() == exitButton) {
+
+                mainMenuController.execute();
+            }
+        });
+    }
+
     public String getViewName() {
 
         return viewName;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        final MainMenuState state = (MainMenuState) evt.getNewValue();
+        JOptionPane.showMessageDialog(this, "Objective property change");
     }
 }

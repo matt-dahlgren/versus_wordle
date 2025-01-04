@@ -31,8 +31,7 @@ public class UserGuessPresenter implements UserGuessOutputDataBoundary {
         userGuessViewModel.setState(userState);
         userGuessViewModel.firePropertyChanged();
 
-        // TODO: check if this runs with this line of code commented
-        // viewManagerModel.setState(userGuessViewModel.getViewName());
+        viewManagerModel.setState(userGuessViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
 

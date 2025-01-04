@@ -11,14 +11,14 @@ import java.util.Map;
  */
 public class UserGuessOutputData {
 
-    private final Map<Word, List<Integer>> userGuesses;
-    private final Map<Word, List<Integer>> cpuGuesses;
+    private final Map<Integer, Map<Word, List<Integer>>> userGuesses;
+    private final Map<Integer, Map<Word, List<Integer>>> cpuGuesses;
     private final boolean isWon;
     private final int turn;
     private final Map<Character, Letter> letterBoard;
 
-    public UserGuessOutputData(Map<Word, List<Integer>> userGuesses,
-                               Map<Word, List<Integer>> cpuGuesses, boolean isWon, int turn,
+    public UserGuessOutputData(Map<Integer, Map<Word, List<Integer>>> userGuesses,
+                               Map<Integer, Map<Word, List<Integer>>> cpuGuesses, boolean isWon, int turn,
                                Map<Character, Letter> letterBoard) {
 
         this.userGuesses = userGuesses;
@@ -30,7 +30,7 @@ public class UserGuessOutputData {
 
     // Getter functions for the user guess outputData.
 
-    public Map<Word, List<Integer>> getUserGuesses() {
+    public Map<Integer,Map<Word, List<Integer>>> getUserGuesses() {
         return userGuesses;
     }
 
@@ -42,7 +42,7 @@ public class UserGuessOutputData {
         return turn;
     }
 
-    public Map<Word, List<Integer>> getCpuGuesses() {
+    public Map<Integer, Map<Word, List<Integer>>> getCpuGuesses() {
         return cpuGuesses;
     }
 

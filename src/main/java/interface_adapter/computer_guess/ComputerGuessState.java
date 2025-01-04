@@ -1,5 +1,6 @@
 package interface_adapter.computer_guess;
 
+import entities.Letter;
 import entities.Word;
 
 import java.util.List;
@@ -10,24 +11,35 @@ import java.util.Map;
  */
 public class ComputerGuessState {
 
-    private Map<Word, List<Integer>> currentDisplayedBoard;
-    private Map<Word, List<Integer>> playerBoard;
+    private Map<Integer, Map<Word, List<Integer>>> currentDisplayedBoard;
+    private Map<Integer, Map<Word, List<Integer>>> playerBoard;
+    private Map<Character, Letter> playerLetters;
 
-    public void setCurrentDisplayedBoard(Map<Word, List<Integer>> currentDisplayedBoard) {
+    public void setCurrentDisplayedBoard(Map<Integer, Map<Word, List<Integer>>> currentDisplayedBoard) {
         this.currentDisplayedBoard = currentDisplayedBoard;
     }
 
-    public Map<Word, List<Integer>> getCurrentDisplayedBoard() {
+    public Map<Integer, Map<Word, List<Integer>>> getCurrentDisplayedBoard() {
         return currentDisplayedBoard;
     }
 
-    public void setPlayerBoard(Map<Word, List<Integer>> playerBoard) {
+    public void setPlayerBoard(Map<Integer, Map<Word, List<Integer>>> playerBoard) {
 
         this.playerBoard = playerBoard;
     }
 
-    public Map<Word, List<Integer>> getPlayerBoard() {
+    public Map<Integer, Map<Word, List<Integer>>> getPlayerBoard() {
 
         return playerBoard;
+    }
+
+    public void setPlayerLetters(Map<Character, Letter> playerLetters) {
+
+        this.playerLetters = playerLetters;
+    }
+
+    public Map<Character, Letter> getPlayerLetters() {
+
+        return playerLetters;
     }
 }

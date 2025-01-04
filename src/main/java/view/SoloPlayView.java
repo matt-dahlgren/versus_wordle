@@ -4,6 +4,7 @@ import app.ColourConstants;
 import interface_adapter.computer_guess.ComputerGuessController;
 import interface_adapter.computer_guess.ComputerGuessState;
 import interface_adapter.computer_guess.ComputerGuessViewModel;
+import interface_adapter.end_of_game.EndGameState;
 import interface_adapter.start_game.StartGameState;
 import interface_adapter.start_game.StartGameViewModel;
 import interface_adapter.to_main_menu.MainMenuController;
@@ -13,26 +14,40 @@ import interface_adapter.user_guess.UserGuessViewModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
-import java.util.Map;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class SoloPlayView extends JPanel {
+public class SoloPlayView extends JPanel implements ActionListener, PropertyChangeListener {
 
     private final String viewName = "SoloPlayView";
     private ComputerGuessController computerGuessController;
     private UserGuessController userGuessController;
     private MainMenuController mainMenuController;
+    private ComputerGuessView computerGuessView;
+    private GuessView guessView;
+    private KeyboardView keyboardView;
+    private JPanel centrePanel;
+    private final ComputerGuessViewModel computerGuessViewModel;
+    private final UserGuessViewModel userGuessViewModel;
 
     public SoloPlayView(ComputerGuessViewModel computerGuessViewModel, UserGuessViewModel userGuessViewModel) {
+
+        this.computerGuessViewModel = computerGuessViewModel;
+        this.userGuessViewModel = userGuessViewModel;
+
+        userGuessViewModel.addPropertyChangeListener(this);
+        computerGuessViewModel.addPropertyChangeListener(this);
 
         setLayout(new BorderLayout());
 
         // add the guess panel
-        final UserGuessState userGuessState = userGuessViewModel.getState();
-        add(new KeyboardView(userGuessState.getLetterBoard()), BorderLayout.SOUTH);
+        keyboardView = new KeyboardView(userGuessViewModel.getState().getLetterBoard());
+        add(keyboardView, BorderLayout.SOUTH);
 
         // add the centre panel with guess view in the middle
-        JPanel centrePanel = new JPanel(new GridLayout(1, 3));
+        centrePanel = new JPanel(new GridLayout(1, 3));
 
         JPanel leftPanel = new JPanel();
         leftPanel.setBackground(ColourConstants.GREEN);
@@ -40,19 +55,21 @@ public class SoloPlayView extends JPanel {
         rightPanel.setBackground(ColourConstants.GREEN);
 
         centrePanel.add(leftPanel);
-        centrePanel.add(new GuessView(userGuessState.getCurrentDisplayedBoard()), BorderLayout.CENTER);
+        guessView = new GuessView(userGuessViewModel.getState().getCurrentDisplayedBoard());
+        centrePanel.add(guessView, BorderLayout.CENTER);
         centrePanel.add(rightPanel);
 
         add(centrePanel, BorderLayout.CENTER);
 
         // add a top panel, this houses to computer guess view
-        final ComputerGuessState computerGuessState = computerGuessViewModel.getState();
-        add(new ComputerGuessView(computerGuessState.getCurrentDisplayedBoard()), BorderLayout.PAGE_START);
+        computerGuessView = new ComputerGuessView(computerGuessViewModel.getState().getCurrentDisplayedBoard());
+        add(computerGuessView, BorderLayout.PAGE_START);
     }
 
     public void setComputerGuessController(ComputerGuessController computerGuessController) {
 
         this.computerGuessController = computerGuessController;
+        this.computerGuessView.setMainMenuController(mainMenuController);
     }
 
     public void setUserGuessController(UserGuessController userGuessController) {
@@ -65,33 +82,74 @@ public class SoloPlayView extends JPanel {
         this.mainMenuController = mainMenuController;
     }
 
-    /**
-     * Prepare the view when the game has just started.
-     * @param startGameViewModel has no null parameters.
-     */
-    public SoloPlayView(StartGameViewModel startGameViewModel) {
+    public String getViewName() {
 
-        setLayout(new BorderLayout());
+        return viewName;
+    }
 
-        // add the guess panel
-        final StartGameState startGameState = startGameViewModel.getState();
-        add(new KeyboardView(startGameState.getLetters()), BorderLayout.SOUTH);
+    public ComputerGuessView getComputerGuessView() {
 
-        // add the centre panel with guess view in the middle
-        JPanel centrePanel = new JPanel(new GridLayout(1, 3));
+        return computerGuessView;
+    }
+
+    public GuessView getGuessView() {
+
+        return guessView;
+    }
+
+    public KeyboardView getKeyboardView() {
+
+        return keyboardView;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+
+        if (evt.getNewValue() instanceof ComputerGuessState) {
+            final ComputerGuessState guessState = (ComputerGuessState) evt.getNewValue();
+            setFields(guessState);
+        }
+    }
+
+    public void setFields(ComputerGuessState guessState) {
+
+        // update the computer progress bar
+        this.remove(computerGuessView);
+        computerGuessView = new ComputerGuessView(guessState.getCurrentDisplayedBoard());
+        this.add(computerGuessView, BorderLayout.PAGE_START);
+
+        // update the keyboard view
+        this.remove(keyboardView);
+        keyboardView = new KeyboardView(guessState.getPlayerLetters());
+        keyboardView.setComputerGuessController(computerGuessController);
+        keyboardView.setUserGuessController(userGuessController);
+        keyboardView.setEnterButtonUse();
+        add(keyboardView, BorderLayout.SOUTH);
+
+        // update the guess view
+        this.remove(centrePanel);
+        centrePanel = new JPanel(new GridLayout(1, 3));
+        centrePanel.setBackground(ColourConstants.GREEN);
 
         JPanel leftPanel = new JPanel();
         leftPanel.setBackground(ColourConstants.GREEN);
+
+        GuessView middlePanel = new GuessView(guessState.getPlayerBoard());
+
         JPanel rightPanel = new JPanel();
         rightPanel.setBackground(ColourConstants.GREEN);
 
         centrePanel.add(leftPanel);
-        centrePanel.add(new GuessView(startGameState.getPlayerGuesses()), BorderLayout.CENTER);
+        centrePanel.add(middlePanel);
         centrePanel.add(rightPanel);
+        this.add(centrePanel, BorderLayout.CENTER);
 
-        add(centrePanel, BorderLayout.CENTER);
-
-        // add a top panel, this houses to computer guess view
-        add(new ComputerGuessView(startGameState.getComputerGuesses()), BorderLayout.PAGE_START);
+        this.revalidate();
+        this.repaint();
     }
 }

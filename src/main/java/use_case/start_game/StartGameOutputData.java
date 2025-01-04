@@ -11,11 +11,12 @@ import java.util.Map;
  */
 public class StartGameOutputData {
 
-    private final Map<Word, List<Integer>> computerGuesses;
-    private final Map<Word, List<Integer>> playerGuesses;
+    private final Map<Integer, Map<Word, List<Integer>>> computerGuesses;
+    private final Map<Integer, Map<Word, List<Integer>>> playerGuesses;
     private final Map<Character, Letter> letterMap;
 
-    public StartGameOutputData(Map<Word, List<Integer>> computerGuesses, Map<Word, List<Integer>> playerGuesses,
+    public StartGameOutputData(Map<Integer, Map<Word, List<Integer>>> computerGuesses,
+                               Map<Integer, Map<Word, List<Integer>>> playerGuesses,
                                Map<Character, Letter> letterMap) {
 
         this.computerGuesses = computerGuesses;
@@ -23,12 +24,12 @@ public class StartGameOutputData {
         this.letterMap = letterMap;
     }
 
-    public Map<Word, List<Integer>> getComputerGuesses() {
+    public Map<Integer,Map<Word, List<Integer>>> getComputerGuesses() {
 
         return computerGuesses;
     }
 
-    public Map<Word, List<Integer>> getPlayerGuesses() {
+    public Map<Integer,Map<Word, List<Integer>>> getPlayerGuesses() {
 
         return playerGuesses;
     }

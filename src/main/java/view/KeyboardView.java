@@ -2,24 +2,36 @@ package view;
 
 import app.ColourConstants;
 import entities.Letter;
+import interface_adapter.computer_guess.ComputerGuessController;
+import interface_adapter.to_main_menu.MainMenuState;
+import interface_adapter.user_guess.UserGuessController;
 import interface_adapter.user_guess.UserGuessState;
 import interface_adapter.user_guess.UserGuessViewModel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.Map;
 
 /**
  * The view that manages the Keyboard View.
  */
-public class KeyboardView extends JPanel {
+public class KeyboardView extends JPanel implements ActionListener, PropertyChangeListener {
 
     private final String viewName = "KeyboardView";
+    private JTextField textField;
+    private ComputerGuessController computerGuessController;
+    private UserGuessController userGuessController;
+    private final JButton enterButton;
 
     public KeyboardView(Map<Character, Letter> letterBoard) {
 
+        System.out.println("KeyboardView" + letterBoard);
         setBackground(ColourConstants.GREEN);
         setLayout(new GridLayout(4,1));
 
@@ -36,20 +48,28 @@ public class KeyboardView extends JPanel {
         bottomLayer.setBackground(ColourConstants.GREEN);
 
         // Add a text field for the user to type in
-        JTextField textField = new JTextField(15);
+        textField = new JTextField(15);
         textField.setFont(new Font("Times New Roman", Font.BOLD, 16));
         textLayer.add(textField);
         // Add a guess button to make a guess
-        JButton enterButton = new JButton("Enter");
+        enterButton = new JButton("Enter");
         enterButton.setFont(new Font("Times New Roman", Font.BOLD, 16));
         textLayer.add(enterButton);
-
 
         // Add the letter buttons to use on the keyboard
         int letterCount = 1;
         for (char letter = 'a'; letter <= 'z'; letter++) {
 
-            int letterColour = letterBoard.get(letter).getStatus();
+            int letterColour;
+
+            if (letterBoard == null) {
+                letterColour = ColourConstants.WHITE;
+            }
+
+            else {
+                letterColour = letterBoard.get(letter).getStatus();
+            }
+
             LetterButton letterButton = getLetterButton(letterColour, letter, times);
 
             letterButton.addActionListener(e -> {textField.setText(textField.getText() + letterButton.getLetter());
@@ -103,5 +123,41 @@ public class KeyboardView extends JPanel {
     public String getViewName() {
 
         return viewName;
+    }
+
+    public void setComputerGuessController(ComputerGuessController computerGuessController) {
+
+        this.computerGuessController = computerGuessController;
+    }
+
+    public void setUserGuessController(UserGuessController userGuessController) {
+
+        this.userGuessController = userGuessController;
+    }
+
+    public void setEnterButtonUse() {
+
+        enterButton.addActionListener(e -> {
+            if (e.getSource() == enterButton) {
+
+                userGuessController.execute(textField.getText());
+                computerGuessController.execute();
+            }
+        });
+    }
+
+    public JTextField getTextField() {
+
+        return textField;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+
     }
 }

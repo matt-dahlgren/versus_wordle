@@ -22,14 +22,16 @@ public class ViewManager implements PropertyChangeListener {
         this.cardLayout = cardLayout;
         this.viewManagerModel = viewManagerModel;
         this.viewManagerModel.addPropertyChangeListener(this);
-        views.setLayout(cardLayout);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("state")) {
-            final String viewModelName = (String) evt.getNewValue();
-            cardLayout.show(views, viewModelName);
-        }
+//        if (evt.getPropertyName().equals("state")) {
+//            final String viewModelName = (String) evt.getNewValue();
+//            cardLayout.show(views, viewModelName);
+//        }
+        String newState = (String) evt.getNewValue();
+        System.out.println("Switching to view: " + newState);
+        cardLayout.show(views, newState);
     }
 }

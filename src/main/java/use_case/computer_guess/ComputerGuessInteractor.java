@@ -191,48 +191,67 @@ public class ComputerGuessInteractor implements ComputerGuessInputDataBoundary {
         return result;
     }
 
-    // TODO: handle sub case where the computer wins to take the user to the "Loss Screen"
     @Override
     public void execute() {
 
-        // Update the turn
-        gameDataAccessObject.updateTurn();
+        try {
 
-        // Score the answer bank and make a guess
-        scoreWordbank(gameDataAccessObject.getAnswerBank());
-        Word result = getGuess();
+            if (gameDataAccessObject.getTurn() == playerDataAccessObject.getTurn()) {
 
-        // Verify that guess with the answer of the game to return a list of statuses
-        List<Integer> guessBoard = versusDataAccessObject.verifyGuess(result);
+                throw new PrematureGuessException("Player's last move was not valid.");
+            } else {
 
-        // Verify if the game has been won.
-        boolean hasWon = versusDataAccessObject.verifyGameWon(result);
+                System.out.println("Computer Guess Interactor");
+                // Update the turn
+                gameDataAccessObject.updateTurn();
 
-        if (hasWon) {
-            gameDataAccessObject.gameWon();
+                // Score the answer bank and make a guess
+                scoreWordbank(gameDataAccessObject.getAnswerBank());
+                Word result = getGuess();
+
+                // Verify that guess with the answer of the game to return a list of statuses
+                List<Integer> guessBoard = versusDataAccessObject.verifyGuess(result);
+
+                // Verify if the game has been won.
+                boolean hasWon = versusDataAccessObject.verifyGameWon(result);
+
+                if (hasWon) {
+                    gameDataAccessObject.gameWon();
+                }
+                // Update the current game board.
+                for (int i = 0; i < guessBoard.size(); i++) {
+
+                    gameDataAccessObject.updateBoard(result.getLiteral().charAt(i), guessBoard.get(i), i);
+                }
+
+                // Update possible answers to this game.
+                gameDataAccessObject.updateAnswerBank(guessBoard, result);
+
+                // Update the board log to keep track of the game's previous turns and initialize output data to be sent to the
+                // Presenter.
+                gameDataAccessObject.updateBoardLog(result, guessBoard);
+                ComputerGuessOutputData outputData = new ComputerGuessOutputData(gameDataAccessObject.getBoardLog(),
+                        playerDataAccessObject.getBoardLog(), playerDataAccessObject.getLetterBoard(),
+                        gameDataAccessObject.isGameOn(), gameDataAccessObject.getTurn());
+
+                System.out.println(gameDataAccessObject.getTurn());
+                System.out.println(gameDataAccessObject.getBoardLog());
+                // change view to post game if computer has won.
+                if (gameDataAccessObject.isGameOn() || gameDataAccessObject.getTurn() == 6) {
+
+                    computerGuessOutputDataBoundary.prepareComputerWinView(outputData);
+                } else {
+                    computerGuessOutputDataBoundary.preparePostGuessView(outputData);
+                }
+            }
+
         }
-        // Update the current game board.
-        for (int i = 0; i < guessBoard.size(); i++) {
+        catch (PrematureGuessException e) {
 
-            gameDataAccessObject.updateBoard(result.getLiteral().charAt(i), guessBoard.get(i), i);
-        }
+            ComputerGuessOutputData outputData = new ComputerGuessOutputData(gameDataAccessObject.getBoardLog(),
+                    playerDataAccessObject.getBoardLog(), playerDataAccessObject.getLetterBoard(),
+                    gameDataAccessObject.isGameOn(), gameDataAccessObject.getTurn());
 
-        // Update possible answers to this game.
-        gameDataAccessObject.updateAnswerBank(guessBoard, result);
-
-        // Update the board log to keep track of the game's previous turns and initialize output data to be sent to the
-        // Presenter.
-        gameDataAccessObject.updateBoardLog(result, guessBoard);
-        ComputerGuessOutputData outputData = new ComputerGuessOutputData(gameDataAccessObject.getBoardLog(),
-                playerDataAccessObject.getBoardLog(), gameDataAccessObject.isGameOn(), gameDataAccessObject.getTurn());
-
-        // change view to post game if computer has won.
-        if (gameDataAccessObject.isGameOn() || gameDataAccessObject.getTurn() == 6) {
-
-            computerGuessOutputDataBoundary.prepareComputerWinView(outputData);
-        }
-
-        else {
             computerGuessOutputDataBoundary.preparePostGuessView(outputData);
         }
     }

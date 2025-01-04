@@ -32,15 +32,15 @@ public class ComputerGuessPresenter implements ComputerGuessOutputDataBoundary {
         // previously set board.
         final ComputerGuessState guessState = computerGuessViewModel.getState();
         guessState.setCurrentDisplayedBoard(outputData.getComputerGuess());
+        guessState.setPlayerLetters(outputData.getPlayerLetters());
         guessState.setPlayerBoard(outputData.getPlayerGuess());
 
         // Set the computerGuessViewModel to the previously initialized state
         computerGuessViewModel.setState(guessState);
         computerGuessViewModel.firePropertyChanged();
 
-        // TODO: Verify that this still builds without the commented out lines.
         // Update the View Model Manager with the newly set computerGuessViewModel
-        // viewManagerModel.setState(computerGuessViewModel.getViewName());
+        viewManagerModel.setState(computerGuessViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
 
@@ -50,6 +50,10 @@ public class ComputerGuessPresenter implements ComputerGuessOutputDataBoundary {
         final EndGameState endGameState = endGameViewModel.getState();
         endGameState.setPlayerBoard(outputData.getPlayerGuess());
         endGameState.setComputerBoard(outputData.getComputerGuess());
+
+        System.out.println("computerguess presenter");
+        System.out.println(outputData.getPlayerGuess());
+        System.out.println(outputData.getComputerGuess());
 
         endGameViewModel.setState(endGameState);
         endGameViewModel.firePropertyChanged();

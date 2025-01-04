@@ -2,12 +2,18 @@ package view;
 
 import app.ColourConstants;
 import interface_adapter.start_game.StartGameController;
+import interface_adapter.start_game.StartGameState;
+import interface_adapter.to_main_menu.MainMenuState;
 import interface_adapter.to_main_menu.MainMenuViewModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class MainMenuView extends JPanel {
+public class MainMenuView extends JPanel implements ActionListener, PropertyChangeListener {
 
     private final String viewName = "MainMenu";
     private StartGameController startGameController;
@@ -35,22 +41,20 @@ public class MainMenuView extends JPanel {
         titlePanel.add(titleLabel);
         add(titlePanel);
 
-        // Add button panel to access the two types of playable wordgames.
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.setBackground(ColourConstants.GREEN);
-
-        JButton singlePlayer = new JButton("Solo Game");
-        singlePlayer.setBackground(ColourConstants.WHITE_TILE);
-        singlePlayer.setFont(new Font(times, Font.BOLD, 24));
 
         JButton versusComputer = new JButton("New Game");
         versusComputer.setBackground(ColourConstants.WHITE_TILE);
         versusComputer.setFont(new Font(times, Font.BOLD, 24));
 
-        // Set both buttons to be the same size, decided to only verify the size of versusComputer button since its
-        // text is noticeably larger than the text in singlePlayer
-        Dimension buttonSize = versusComputer.getPreferredSize();
-        singlePlayer.setPreferredSize(buttonSize);
+        versusComputer.addActionListener(
+                e -> {
+                    if (e.getSource().equals(versusComputer)) {
+
+                        startGameController.startGame();
+                }
+            });
 
         // buttonPanel.add(singlePlayer);
         buttonPanel.add(versusComputer);
@@ -89,5 +93,16 @@ public class MainMenuView extends JPanel {
     public void setMainMenuController(StartGameController startGameController) {
 
         this.startGameController = startGameController;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        final StartGameState state = (StartGameState) evt.getNewValue();
+        JOptionPane.showMessageDialog(this, "Objective property change");
     }
 }

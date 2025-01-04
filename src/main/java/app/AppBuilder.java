@@ -57,6 +57,7 @@ public class AppBuilder {
     private EndOfGameView endOfGameView;
     private MainMenuView mainMenuView;
     private SoloPlayView soloPlayView;
+    private StartPlayView startPlayView;
 
     // View Models
     private ComputerGuessViewModel computerGuessViewModel;
@@ -65,7 +66,10 @@ public class AppBuilder {
     private UserGuessViewModel userGuessViewModel;
     private EndGameViewModel endGameViewModel;
 
-    public AppBuilder() throws FileNotFoundException {}
+    public AppBuilder() {
+
+        appPanel.setLayout(appLayout);
+    }
 
     // Building Views
 
@@ -75,10 +79,9 @@ public class AppBuilder {
      */
     public AppBuilder addEndOfGameView() {
 
-        computerGuessViewModel = new ComputerGuessViewModel();
-        userGuessViewModel = new UserGuessViewModel();
-        endOfGameView = new EndOfGameView(computerGuessViewModel);
-        endOfGameView = new EndOfGameView(userGuessViewModel);
+        endGameViewModel = new EndGameViewModel();
+        endOfGameView = new EndOfGameView(endGameViewModel);
+        appPanel.add(endOfGameView, endGameViewModel.getViewName());
         return this;
     }
 
@@ -90,6 +93,7 @@ public class AppBuilder {
 
         mainMenuViewModel = new MainMenuViewModel();
         mainMenuView = new MainMenuView(mainMenuViewModel);
+        appPanel.add(mainMenuView, mainMenuViewModel.getViewName());
         return this;
     }
 
@@ -102,6 +106,15 @@ public class AppBuilder {
         userGuessViewModel = new UserGuessViewModel();
         computerGuessViewModel = new ComputerGuessViewModel();
         soloPlayView = new SoloPlayView(computerGuessViewModel, userGuessViewModel);
+        appPanel.add(soloPlayView,soloPlayView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addSoloPlayStartView() {
+
+        startGameViewModel = new StartGameViewModel();
+        startPlayView = new StartPlayView(startGameViewModel);
+        appPanel.add(startPlayView,startPlayView.getViewName());
         return this;
     }
 
@@ -121,6 +134,9 @@ public class AppBuilder {
 
         final ComputerGuessController computerGuessController = new ComputerGuessController(computerGuessInteracor);
         soloPlayView.setComputerGuessController(computerGuessController);
+        soloPlayView.getKeyboardView().setComputerGuessController(computerGuessController);
+        startPlayView.setComputerGuessController(computerGuessController);
+        startPlayView.getKeyboardView().setComputerGuessController(computerGuessController);
 
         return this;
     }
@@ -151,8 +167,12 @@ public class AppBuilder {
 
         final MainMenuController mainMenuController = new MainMenuController(mainMenuInteractor);
 
+        startPlayView.setMainMenuController(mainMenuController);
+        startPlayView.getComputerGuessView().setMainMenuController(mainMenuController);
         soloPlayView.setMainMenuController(mainMenuController);
+        soloPlayView.getComputerGuessView().setMainMenuController(mainMenuController);
         endOfGameView.setMainMenuController(mainMenuController);
+        endOfGameView.getComputerGuessView().setMainMenuController(mainMenuController);
         return this;
     }
 
@@ -166,6 +186,10 @@ public class AppBuilder {
         final UserGuessController userGuessController = new UserGuessController(userGuessInteracor);
 
         soloPlayView.setUserGuessController(userGuessController);
+        soloPlayView.getKeyboardView().setUserGuessController(userGuessController);
+        soloPlayView.getKeyboardView().setEnterButtonUse();
+        startPlayView.getKeyboardView().setUserGuessController(userGuessController);
+        startPlayView.getKeyboardView().setEnterButtonUse();
         return this;
     }
 

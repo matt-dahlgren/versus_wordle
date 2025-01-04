@@ -12,7 +12,7 @@ import static app.ColourConstants.*;
  */
 public class VersusDataAccessObject {
 
-    private final Word answer;
+    private Word answer;
 
     public VersusDataAccessObject(String answer) {
         this.answer = new Word(answer);
@@ -174,5 +174,15 @@ public class VersusDataAccessObject {
     public boolean verifyGameWon(Word guess) {
 
         return guess.getLiteral().equals(answer.getLiteral());
+    }
+
+    public void setAnswer(String answer) {
+
+        this.answer = new Word(answer);
+    }
+
+    public String getAnswer() {
+
+        return answer.getLiteral();
     }
 }

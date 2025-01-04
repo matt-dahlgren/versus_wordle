@@ -29,7 +29,7 @@ public class UserGuessInteractor implements UserGuessInputDataBoundary{
 
     @Override
     public void execute(UserGuessInputData inputData) {
-
+        System.out.println("UserGuessInteractor execute");
         Word guess = new Word(inputData.getGuess());
 
         // verify that the word that the user input was a valid guess, if yes then continue to preparing outputData to
@@ -46,7 +46,9 @@ public class UserGuessInteractor implements UserGuessInputDataBoundary{
             for (Word possibleGuess : gameDataAccessObject.getGuessBank()) {
 
                 if (possibleGuess.getLiteral().equals(guess.getLiteral())) {
+                    System.out.println(possibleGuess.getLiteral() + "In guess bank");
                     result = true;
+                    System.out.println(result);
                     break;
                 }
             }
@@ -64,6 +66,7 @@ public class UserGuessInteractor implements UserGuessInputDataBoundary{
 
                 // get the newest layer of the user's board.
                 List<Integer> newBoardLayer = versusDataAccessObject.verifyGuess(guess);
+                System.out.println(newBoardLayer);
 
                 // add this turn's results to the memory of this game to later update the user's view.
                 gameDataAccessObject.updateAnswerBank(newBoardLayer, guess);
@@ -72,6 +75,8 @@ public class UserGuessInteractor implements UserGuessInputDataBoundary{
 
                     gameDataAccessObject.gameWon();
                 }
+
+                gameDataAccessObject.updateBoardLog(guess, newBoardLayer);
 
                 UserGuessOutputData outputData = new UserGuessOutputData(gameDataAccessObject.getBoardLog(),
                         computerDataAccessObject.getBoardLog(), gameDataAccessObject.isGameOn(),

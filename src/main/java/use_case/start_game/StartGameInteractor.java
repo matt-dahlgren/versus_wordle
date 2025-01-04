@@ -69,9 +69,12 @@ public class StartGameInteractor implements StartGameInputBoundary {
 
     public void prepareNewGame() {
 
-        gameDataAccessObject = new GameDataAccessObject();
-        playerDataAccessObject = new GameDataAccessObject();
-        versusDataAccessObject = new VersusDataAccessObject(pickNewWord());
+        System.out.println("Preparing new game...");
+        gameDataAccessObject.reset();
+        playerDataAccessObject.reset();
+        versusDataAccessObject.setAnswer(pickNewWord());
+        System.out.println("New game and: " + playerDataAccessObject.getBoardLog());
+        System.out.println(versusDataAccessObject.getAnswer());
 
         StartGameOutputData outputData = new StartGameOutputData(gameDataAccessObject.getBoardLog(),
                 playerDataAccessObject.getBoardLog(), playerDataAccessObject.getLetterBoard());

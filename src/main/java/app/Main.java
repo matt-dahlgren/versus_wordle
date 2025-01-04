@@ -20,8 +20,8 @@ public class Main {
         final JFrame application = appBuilder
                 .addEndOfGameView()
                 .addMainMenuView()
-                .addMainMenuView()
                 .addSoloPlayView()
+                .addSoloPlayStartView()
                 .addComputerGuessUseCase()
                 .addStartGameUseCase()
                 .addUserGuessUseCase()

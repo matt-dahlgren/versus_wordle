@@ -11,15 +11,15 @@ import java.util.Map;
  */
 public class UserGuessState {
 
-    private Map<Word, List<Integer>> currentDisplayedBoard;
-    private Map<Word, List<Integer>> computerDisplayedBoard;
+    private Map<Integer, Map<Word, List<Integer>>> currentDisplayedBoard;
+    private Map<Integer, Map<Word, List<Integer>>> computerDisplayedBoard;
     private Map<Character, Letter> letterBoard;
 
-    public void setCurrentDisplayedBoard(Map<Word, List<Integer>> currentDisplayedBoard) {
+    public void setCurrentDisplayedBoard(Map<Integer, Map<Word, List<Integer>>> currentDisplayedBoard) {
         this.currentDisplayedBoard = currentDisplayedBoard;
     }
 
-    public Map<Word, List<Integer>> getCurrentDisplayedBoard() {
+    public Map<Integer,Map<Word, List<Integer>>> getCurrentDisplayedBoard() {
         return currentDisplayedBoard;
     }
 
@@ -33,12 +33,12 @@ public class UserGuessState {
         return letterBoard;
     }
 
-    public void setComputerDisplayedBoard(Map<Word, List<Integer>> computerDisplayedBoard) {
+    public void setComputerDisplayedBoard(Map<Integer,Map<Word, List<Integer>>> computerDisplayedBoard) {
 
         this.computerDisplayedBoard = computerDisplayedBoard;
     }
 
-    public Map<Word, List<Integer>> getComputerDisplayedBoard() {
+    public Map<Integer,Map<Word, List<Integer>>> getComputerDisplayedBoard() {
 
         return computerDisplayedBoard;
     }

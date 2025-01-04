@@ -6,7 +6,7 @@ import interface_adapter.to_main_menu.MainMenuState;
 public class StartGameViewModel extends ViewModel<StartGameState> {
 
     public StartGameViewModel() {
-        super("SoloPlayState");
+        super("StartPlayView");
         setState(new StartGameState());
     }
 }

@@ -16,12 +16,12 @@ import static app.ColourConstants.*;
  */
 public class GameDataAccessObject {
 
-    private final ArrayList<Word> answerBank;
-    private final ArrayList<Word> guessBank;
-    private final Map<Character, Letter> letterBoard;
-    private final ArrayList<Word> guessedWords;
+    private ArrayList<Word> answerBank;
+    private ArrayList<Word> guessBank;
+    private Map<Character, Letter> letterBoard;
+    private ArrayList<Word> guessedWords;
     private int turn;
-    private final Map<Word,List<Integer>> boardLog;
+    private Map<Integer, Map<Word,List<Integer>>> boardLog;
     private boolean gameOn;
 
     public GameDataAccessObject() {
@@ -203,14 +203,17 @@ public class GameDataAccessObject {
      */
     public void updateBoardLog(Word guess, List<Integer> boardColours) {
 
-        boardLog.put(guess, boardColours);
+        Map<Word, List<Integer>> word = new HashMap<>();
+        word.put(guess, boardColours);
+
+        boardLog.put(boardLog.size() + 1, word);
     }
 
     /**
      * The getter for the boardLog instance attribute.
      * @return A Map that holds turn numbers to their respective guess and board format.
      */
-    public Map<Word, List<Integer>> getBoardLog() {
+    public Map<Integer,Map<Word, List<Integer>>> getBoardLog() {
 
         return boardLog;
     }
@@ -253,5 +256,77 @@ public class GameDataAccessObject {
 
     public List<Word> getGuessBank() {
         return guessBank;
+    }
+
+    /**
+     * reset the gdao.
+     */
+    public void reset() {
+
+        // Games are initialized as not won.
+        this.gameOn = false;
+
+        // Initializes the board log.
+        this.boardLog = new HashMap<>();
+
+        // Initializes the turn counter.
+        turn = 0;
+
+        // Initializes an empty list corresponding to the guessed words.
+        guessedWords = new ArrayList<>();
+
+        // Initializes the alphabet for this player in this game.
+        letterBoard = new HashMap<>();
+
+        for (char letter = 'a'; letter <= 'z'; letter++) {
+            Letter curr = new Letter(String.valueOf(letter), WHITE);
+            letterBoard.put(letter, curr);
+        }
+
+        // build the answer bank with words from valid_answers.txt found in src/main/resources
+        answerBank = new ArrayList<>();
+
+        try {
+            URL answerPath = getClass().getClassLoader().getResource("valid_answers.txt");
+            if (answerPath == null) {
+                throw new FileNotFoundException();
+            }
+
+            File answerFile = new File(answerPath.getFile());
+            Scanner answerReader = new Scanner(answerFile);
+
+            while (answerReader.hasNextLine()) {
+                // Reads lines of this file until the end and adds new words to our answer bank.
+                String line = answerReader.nextLine();
+                Word addedWord = new Word(line, letterBoard);
+                answerBank.add(addedWord);
+            }
+        }
+        catch (FileNotFoundException e) {
+            System.out.println("File not found: 'valid_answers.txt'");
+        }
+
+        // build the answer bank with words from valid_guesses.txt found in src/main/resources
+        guessBank = new ArrayList<>();
+
+        try {
+            URL answerPath = getClass().getClassLoader().getResource("valid_guesses.txt");
+            if (answerPath == null) {
+                throw new FileNotFoundException();
+            }
+
+            File answerFile = new File(answerPath.getFile());
+            Scanner answerReader = new Scanner(answerFile);
+
+            while (answerReader.hasNextLine()) {
+                // Reads lines of this file until the end and adds new words to our answer bank.
+                String line = answerReader.nextLine();
+                Word newWord = new Word(line, letterBoard);
+                guessBank.add(newWord);
+            }
+        }
+        catch (FileNotFoundException e) {
+            System.out.println("File not found: 'valid_answers.txt'");
+        }
     }
 }

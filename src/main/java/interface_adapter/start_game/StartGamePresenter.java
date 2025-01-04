@@ -22,6 +22,7 @@ public class StartGamePresenter implements StartGameOutputBoundary {
         startGameState.setLetters(outputData.getLetterMap());
         startGameState.setComputerGuesses(outputData.getComputerGuesses());
         startGameState.setPlayerGuesses(outputData.getPlayerGuesses());
+
         startGameViewModel.setState(startGameState);
         startGameViewModel.firePropertyChanged();
 
