@@ -205,9 +205,19 @@ public class ComputerGuessInteractor implements ComputerGuessInputDataBoundary {
                 // Update the turn
                 gameDataAccessObject.updateTurn();
 
-                // Score the answer bank and make a guess
-                scoreWordbank(gameDataAccessObject.getAnswerBank());
-                Word result = getGuess();
+                Word result;
+
+                if (gameDataAccessObject.getTurn() == 1)
+
+                    result = new Word("wound");
+
+                else {
+
+                    // Score the answer bank and make a guess
+                    scoreWordbank(gameDataAccessObject.getAnswerBank());
+                    result = getGuess();
+
+                }
 
                 // Verify that guess with the answer of the game to return a list of statuses
                 List<Integer> guessBoard = versusDataAccessObject.verifyGuess(result);
