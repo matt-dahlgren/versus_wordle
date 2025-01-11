@@ -22,7 +22,7 @@ public class ComputerGuessInteractorAnswerTest {
         EndGameViewModel vmModel2 = new EndGameViewModel();
         GameDataAccessObject gameDataAccessObject = new GameDataAccessObject();
         GameDataAccessObject playerData = new GameDataAccessObject();
-        Word pizza = new Word("wooer");
+        Word pizza = new Word("round");
         VersusDataAccessObject versusDataAccessObject = new VersusDataAccessObject("wooer");
         ComputerGuessOutputDataBoundary outputDataBoundary = new ComputerGuessPresenter(vm, vmModel, vmModel2);
         ComputerGuessInteractor testGuess = new ComputerGuessInteractor(gameDataAccessObject, playerData,
@@ -36,7 +36,18 @@ public class ComputerGuessInteractorAnswerTest {
             testGuess.scoreWordbank(gameDataAccessObject.getGuessBank());
             testGuess.scoreWordbank(gameDataAccessObject.getAnswerBank());
 
-            Word guess = testGuess.getGuess();
+            Word guess;
+
+            if (gameDataAccessObject.getTurn() == 1) {
+
+                guess = new Word("round");
+            }
+
+            else {
+
+                guess = testGuess.getGuess();
+
+            }
 
             System.out.println(guess.getLiteral());
 

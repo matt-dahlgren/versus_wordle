@@ -45,9 +45,21 @@ public class ComputerGuessEachAnswerTest {
 
                 gameDataAccessObject.updateTurn();
 
-                testGuess.scoreWordbank(gameDataAccessObject.getAnswerBank());
+                Word guess;
 
-                Word guess = testGuess.getGuess();
+                if (gameDataAccessObject.getTurn() == 1) {
+
+                    guess = new Word("wound");
+                }
+
+                else {
+
+                    testGuess.scoreWordbank(gameDataAccessObject.getAnswerBank());
+
+                    guess = testGuess.getGuess();
+
+                }
+
 
                 List<Integer> guessBoard = versusDataAccessObject.verifyGuess(guess);
 

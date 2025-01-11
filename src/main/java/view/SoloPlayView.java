@@ -121,6 +121,7 @@ public class SoloPlayView extends JPanel implements ActionListener, PropertyChan
         // update the computer progress bar
         this.remove(computerGuessView);
         computerGuessView = new ComputerGuessView(guessState.getCurrentDisplayedBoard());
+        computerGuessView.setMainMenuController(mainMenuController);
         this.add(computerGuessView, BorderLayout.PAGE_START);
 
         // update the keyboard view
